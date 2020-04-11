@@ -2,13 +2,13 @@ use std::fmt::Debug;
 use std::fmt;
 use std::marker::PhantomData;
 
-use riker_macros::{actor, actor_msg};
+use riker_macros::{actor};
 
 #[test]
 fn impls_test() {
-    let en = NewActorMsg::U32(1);
+    NewActorMsg::U32(1);
 
-    let actor = ActorRef::<NewActorMsg> {
+    let _actor = ActorRef::<NewActorMsg> {
         x: PhantomData
     };
 
@@ -31,7 +31,7 @@ impl Actor for NewActor {
     fn handle(&mut self,
                 ctx: &Context<Self::Msg>,
                 msg: Self::Msg,
-                sender: BasicActorRef) {
+                sender: Sender) {
 
         println!("handling..");
         self.receive(ctx, msg, sender);
@@ -42,9 +42,9 @@ impl Receive<u32> for NewActor {
     type Msg = NewActorMsg;
 
     fn receive(&mut self,
-                ctx: &Context<Self::Msg>,
-                msg: u32,
-                sender: BasicActorRef) {
+                _ctx: &Context<Self::Msg>,
+                _msg: u32,
+                _sender: Sender) {
         println!("u32");
     }
 }
@@ -53,13 +53,15 @@ impl Receive<String> for NewActor {
     type Msg = NewActorMsg;
 
     fn receive(&mut self,
-                ctx: &Context<Self::Msg>,
-                msg: String,
-                sender: BasicActorRef) {
+                _ctx: &Context<Self::Msg>,
+                _msg: String,
+                _sender: Sender) {
         println!("String");
     }
 }
 struct BasicActorRef;
+type Sender = Option<BasicActorRef>;
+
 type Context<T> = Option<T>;
 
 trait Actor: Send + 'static {
@@ -92,14 +94,14 @@ trait Actor: Send + 'static {
     }
 
     fn sys_receive(&mut self,
-                    msg: Self::Msg) {
+                    _msg: Self::Msg) {
         
     }
 
     fn handle(&mut self,
                 ctx: &Context<Self::Msg>,
                 msg: Self::Msg,
-                sender: BasicActorRef);
+                sender: Sender);
 }
 
 trait Receive<Msg: Message> {
@@ -108,7 +110,7 @@ trait Receive<Msg: Message> {
     fn receive(&mut self,
                 ctx: &Context<Self::Msg>,
                 msg: Msg,
-                sender: BasicActorRef);
+                sender: Sender);
 }
 
 type BoxedTell<T> = Box<dyn Tell<T> + Send + 'static>;
@@ -144,9 +146,9 @@ struct ActorRef<T: Message> {
     x: PhantomData<T>,
 }
 
-impl<T: Message> ActorRef<T> {
-    fn send_msg(&self, msg: T, sender: Option<BasicActorRef>) {
-        let a = NewActor::default();
-        // a.receive(msg);
-    }
-} 
+// impl<T: Message> ActorRef<T> {
+//     fn send_msg(&self, _msg: T, _sender: Option<BasicActorRef>) {
+//         let _a = NewActor::default();
+//         // a.receive(msg);
+//     }
+// }

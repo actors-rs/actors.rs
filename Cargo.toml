@@ -28,3 +28,8 @@ slog-scope = "4.1"
 
 [dev-dependencies]
 riker-testkit = "0.1.0"
+
+[workspace]
+members = [
+  "riker-macros"
+]
