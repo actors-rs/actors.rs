@@ -1,17 +1,17 @@
 [package]
 name = "riker"
 version = "0.3.2"
-authors = ["Lee Smith <lee@riker.rs>"]
+authors = ["Lee Smith <lee@riker.rs>", "Olexiy Buyanskyy <olexiyb@gmail.com>"]
 edition = "2018"
 description = "Easily build fast, highly concurrent and resilient applications. An Actor Framework for Rust."
 homepage = "https://riker.rs"
-repository = "https://github.com/riker-rs/riker"
+repository = "https://github.com/actors-rs/actors.rs"
 license = "MIT"
 readme = "README.md"
-keywords = ["actors", "actor-model", "async", "cqrs", "event_sourcing"]
+keywords = ["actor", "actors", "actor-model", "async", "cqrs", "event_sourcing"]
 
 [badges]
-travis-ci = { repository = "riker-rs/riker" }
+travis-ci = { repository = "actors-rs/actors.rs" }
 
 [dependencies]
 riker-macros = { path = "riker-macros", version = "0.1" }

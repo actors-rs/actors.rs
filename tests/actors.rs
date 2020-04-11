@@ -87,7 +87,7 @@ fn actor_tell() {
     let props = Props::new(Counter::actor);
     let actor = sys.actor_of(props, "me").unwrap();
 
-    let (probe, _listen) = probe();
+    let (probe, listen) = probe();
     actor.tell(TestProbe(probe), None);
 
     for _ in 0..1_000_000 {
@@ -105,7 +105,7 @@ fn actor_try_tell() {
     let actor = sys.actor_of(props, "me").unwrap();
     let actor: BasicActorRef = actor.into();
 
-    let (probe, _listen) = probe();
+    let (probe, listen) = probe();
     actor
         .try_tell(CounterMsg::TestProbe(TestProbe(probe)), None)
         .unwrap();
