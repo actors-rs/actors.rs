@@ -1,6 +1,7 @@
 # Riker
 
 [![Build Status](https://travis-ci.org/actors-rs/actors.rs.svg?branch=master?branch=master)](https://travis-ci.org/github/actors-rs/actors.rs)
+[![Gitter](https://badges.gitter.im/actors-rs-/community.svg)](https://gitter.im/actors-rs-/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![crates.io](https://meritbadge.herokuapp.com/riker)](https://crates.io/crates/riker)
 [![Released API docs](https://docs.rs/riker/badge.svg)](https://docs.rs/riker)
@@ -113,7 +114,7 @@ Riker is looking for contributors - join the project! You don't need to be an ex
 
 There are multiple ways to contribute:
 
-- Ask questions. Adding to the conversation is a great way to contribute. Find us on [Gitter](https://gitter.im/riker-rs/Lobby).
+- Ask questions. Adding to the conversation is a great way to contribute. Find us on [Gitter](https://gitter.im/actors-rs-/community?utm_source=share-link&utm_medium=link&utm_campaign=share-link).
 - Documentation. Our aim is to make concurrent, resilient systems programming available to everyone and that starts with great Documentation.
 - Additions to Riker code base. Whether small or big, your Pull Request could make a difference.
 - Patterns, data storage and other supporting crates. We are happy to link to and provide full credit to external projects that provide support for databases in Riker's event storage model or implementations of common actor patterns.
