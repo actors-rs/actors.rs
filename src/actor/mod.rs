@@ -7,7 +7,7 @@ pub(crate) mod props;
 pub(crate) mod selection;
 pub(crate) mod uri;
 
-use std::{fmt};
+use std::fmt;
 
 use crate::validate::InvalidName;
 
@@ -34,7 +34,7 @@ pub type MsgResult<T> = Result<(), MsgError<T>>;
 
 /// Internal message error when a message can't be added to an actor's mailbox
 #[doc(hidden)]
-#[derive(Clone,Debug)]
+#[derive(Clone, Debug)]
 pub struct MsgError<T> {
     pub msg: T,
 }
@@ -69,7 +69,6 @@ impl<T> fmt::Display for TryMsgError<T> {
     }
 }
 
-
 /// Error type when an actor fails to start during `actor_of`.
 #[derive(Debug)]
 pub enum CreateError {
@@ -82,18 +81,21 @@ pub enum CreateError {
 impl fmt::Display for CreateError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            CreateError::Panicked => f.write_str("Failed to create actor. Cause: Actor panicked while starting"),
+            CreateError::Panicked => {
+                f.write_str("Failed to create actor. Cause: Actor panicked while starting")
+            }
             CreateError::System => f.write_str("Failed to create actor. Cause: System failure"),
-            CreateError::InvalidName(ref name) => {
-                f.write_str(&format!("Failed to create actor. Cause: Invalid actor name ({})", name))
-            }
-            CreateError::AlreadyExists(ref path) => {
-                f.write_str(&format!("Failed to create actor. Cause: An actor at the same path already exists ({})", path))
-            }
+            CreateError::InvalidName(ref name) => f.write_str(&format!(
+                "Failed to create actor. Cause: Invalid actor name ({})",
+                name
+            )),
+            CreateError::AlreadyExists(ref path) => f.write_str(&format!(
+                "Failed to create actor. Cause: An actor at the same path already exists ({})",
+                path
+            )),
         }
     }
 }
-
 
 impl From<InvalidName> for CreateError {
     fn from(err: InvalidName) -> CreateError {

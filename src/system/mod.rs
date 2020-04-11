@@ -2,7 +2,7 @@ pub(crate) mod logger;
 pub(crate) mod system;
 pub(crate) mod timer;
 
-use std::{fmt};
+use std::fmt;
 
 use crate::actor::BasicActorRef;
 
@@ -118,12 +118,14 @@ pub enum SystemError {
 impl fmt::Display for SystemError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            SystemError::ModuleFailed(ref m) => {
-                f.write_str(&format!("Failed to create actor system. Cause: Sub module failed to start ({})", m))
-            }
-            SystemError::InvalidName(ref name) => {
-                f.write_str(&format!("Failed to create actor system. Cause: Invalid actor system name ({})", name))
-            }
+            SystemError::ModuleFailed(ref m) => f.write_str(&format!(
+                "Failed to create actor system. Cause: Sub module failed to start ({})",
+                m
+            )),
+            SystemError::InvalidName(ref name) => f.write_str(&format!(
+                "Failed to create actor system. Cause: Invalid actor system name ({})",
+                name
+            )),
         }
     }
 }

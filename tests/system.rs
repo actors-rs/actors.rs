@@ -1,5 +1,5 @@
-use futures::executor::block_on;
 use actors::actors::*;
+use futures::executor::block_on;
 
 #[test]
 fn system_create() {

@@ -1,16 +1,14 @@
-use std::fmt::Debug;
 use std::fmt;
+use std::fmt::Debug;
 use std::marker::PhantomData;
 
-use actors_macros::{actor};
+use actors_macros::actor;
 
 #[test]
 fn impls_test() {
     NewActorMsg::U32(1);
 
-    let _actor = ActorRef::<NewActorMsg> {
-        x: PhantomData
-    };
+    let _actor = ActorRef::<NewActorMsg> { x: PhantomData };
 
     // actor.tell(5, None);
 }
@@ -28,11 +26,7 @@ struct NewActor;
 impl Actor for NewActor {
     type Msg = NewActorMsg;
 
-    fn handle(&mut self,
-                ctx: &Context<Self::Msg>,
-                msg: Self::Msg,
-                sender: Sender) {
-
+    fn handle(&mut self, ctx: &Context<Self::Msg>, msg: Self::Msg, sender: Sender) {
         println!("handling..");
         self.receive(ctx, msg, sender);
     }
@@ -41,10 +35,7 @@ impl Actor for NewActor {
 impl Receive<u32> for NewActor {
     type Msg = NewActorMsg;
 
-    fn receive(&mut self,
-                _ctx: &Context<Self::Msg>,
-                _msg: u32,
-                _sender: Sender) {
+    fn receive(&mut self, _ctx: &Context<Self::Msg>, _msg: u32, _sender: Sender) {
         println!("u32");
     }
 }
@@ -52,10 +43,7 @@ impl Receive<u32> for NewActor {
 impl Receive<String> for NewActor {
     type Msg = NewActorMsg;
 
-    fn receive(&mut self,
-                _ctx: &Context<Self::Msg>,
-                _msg: String,
-                _sender: Sender) {
+    fn receive(&mut self, _ctx: &Context<Self::Msg>, _msg: String, _sender: Sender) {
         println!("String");
     }
 }
@@ -71,51 +59,36 @@ trait Actor: Send + 'static {
     ///
     /// Any initialization inherent to the actor's role should be
     /// performed here.
-    /// 
+    ///
     /// Panics in `pre_start` do not invoke the
     /// supervision strategy and the actor will be terminated.
-    fn pre_start(&mut self) {
-
-    }
+    fn pre_start(&mut self) {}
 
     /// Invoked after an actor has started.
     ///
     /// Any post initialization can be performed here, such as writing
     /// to a log file, emmitting metrics.
-    /// 
+    ///
     /// Panics in `post_start` follow the supervision strategy.
-    fn post_start(&mut self) {
-
-    }
+    fn post_start(&mut self) {}
 
     /// Invoked after an actor has been stopped.
-    fn post_stop(&mut self) {
+    fn post_stop(&mut self) {}
 
-    }
+    fn sys_receive(&mut self, _msg: Self::Msg) {}
 
-    fn sys_receive(&mut self,
-                    _msg: Self::Msg) {
-        
-    }
-
-    fn handle(&mut self,
-                ctx: &Context<Self::Msg>,
-                msg: Self::Msg,
-                sender: Sender);
+    fn handle(&mut self, ctx: &Context<Self::Msg>, msg: Self::Msg, sender: Sender);
 }
 
 trait Receive<Msg: Message> {
     type Msg: Message;
 
-    fn receive(&mut self,
-                ctx: &Context<Self::Msg>,
-                msg: Msg,
-                sender: Sender);
+    fn receive(&mut self, ctx: &Context<Self::Msg>, msg: Msg, sender: Sender);
 }
 
 type BoxedTell<T> = Box<dyn Tell<T> + Send + 'static>;
 
-trait Tell<T> : Send + 'static {
+trait Tell<T>: Send + 'static {
     fn tell(&self, msg: T, sender: Option<BasicActorRef>);
     fn box_clone(&self) -> BoxedTell<T>;
 }

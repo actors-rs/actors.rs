@@ -108,4 +108,7 @@ There are multiple ways to contribute:
 - Additions to Riker code base. Whether small or big, your Pull Request could make a difference.
 - Patterns, data storage and other supporting crates. We are happy to link to and provide full credit to external projects that provide support for databases in Riker's event storage model or implementations of common actor patterns.
 
+### pre-commit
 
+The project is using [pre-commit](https://pre-commit.com/) git hooks to verify committed code
+Make sure you install pre-commit

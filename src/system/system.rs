@@ -329,8 +329,8 @@ impl ActorSystem {
     }
 
     pub fn sys_actor_of<A>(&self, name: &str) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
-        where
-            A: ActorFactory,
+    where
+        A: ActorFactory,
     {
         self.provider
             .create_actor(Props::new(A::create), name, &self.sys_root(), self)
@@ -341,12 +341,16 @@ impl ActorSystem {
         name: &str,
         args: Args,
     ) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
-        where
-            Args: ActorArgs,
-            A: ActorFactoryArgs<Args>,
+    where
+        Args: ActorArgs,
+        A: ActorFactoryArgs<Args>,
     {
-        self.provider
-            .create_actor(Props::new_args(A::create_args, args), name, &self.sys_root(), self)
+        self.provider.create_actor(
+            Props::new_args(A::create_args, args),
+            name,
+            &self.sys_root(),
+            self,
+        )
     }
 
     #[inline]
@@ -363,7 +367,8 @@ impl ActorSystem {
         let (tx, rx) = oneshot::channel::<()>();
         let tx = Arc::new(Mutex::new(Some(tx)));
 
-        self.tmp_actor_of_args::<WhenTerminatedActor, _>(tx).unwrap();
+        self.tmp_actor_of_args::<WhenTerminatedActor, _>(tx)
+            .unwrap();
 
         rx
     }
@@ -427,8 +432,12 @@ impl ActorRefFactory for ActorSystem {
         Args: ActorArgs,
         A: ActorFactoryArgs<Args>,
     {
-        self.provider
-            .create_actor(Props::new_args(A::create_args, args), name, &self.user_root(), self)
+        self.provider.create_actor(
+            Props::new_args(A::create_args, args),
+            name,
+            &self.user_root(),
+            self,
+        )
     }
 
     fn stop(&self, actor: impl ActorReference) {
@@ -466,8 +475,12 @@ impl ActorRefFactory for &ActorSystem {
         Args: ActorArgs,
         A: ActorFactoryArgs<Args>,
     {
-        self.provider
-            .create_actor(Props::new_args(A::create_args, args), name, &self.user_root(), self)
+        self.provider.create_actor(
+            Props::new_args(A::create_args, args),
+            name,
+            &self.user_root(),
+            self,
+        )
     }
 
     fn stop(&self, actor: impl ActorReference) {
@@ -476,10 +489,7 @@ impl ActorRefFactory for &ActorSystem {
 }
 
 impl TmpActorRefFactory for ActorSystem {
-    fn tmp_actor_of_props<A>(
-        &self,
-        props: BoxActorProd<A>,
-    ) -> Result<ActorRef<A::Msg>, CreateError>
+    fn tmp_actor_of_props<A>(&self, props: BoxActorProd<A>) -> Result<ActorRef<A::Msg>, CreateError>
     where
         A: Actor,
     {
@@ -506,8 +516,12 @@ impl TmpActorRefFactory for ActorSystem {
         A: ActorFactoryArgs<Args>,
     {
         let name = format!("{}", rand::random::<u64>());
-        self.provider
-            .create_actor(Props::new_args(A::create_args, args), &name, &self.temp_root(), self)
+        self.provider.create_actor(
+            Props::new_args(A::create_args, args),
+            &name,
+            &self.temp_root(),
+            self,
+        )
     }
 }
 
@@ -673,8 +687,8 @@ fn sys_actor_of<A>(
     sys: &ActorSystem,
     name: &str,
 ) -> Result<ActorRef<<A as Actor>::Msg>, SystemError>
-    where
-        A: ActorFactory,
+where
+    A: ActorFactory,
 {
     prov.create_actor(Props::new(A::create), name, &sys.sys_root(), sys)
         .map_err(|_| SystemError::ModuleFailed(name.into()))
@@ -687,12 +701,17 @@ fn sys_actor_of_args<A, Args>(
     name: &str,
     args: Args,
 ) -> Result<ActorRef<<A as Actor>::Msg>, SystemError>
-    where
-        Args: ActorArgs,
-        A: ActorFactoryArgs<Args>,
+where
+    Args: ActorArgs,
+    A: ActorFactoryArgs<Args>,
 {
-    prov.create_actor(Props::new_args(A::create_args, args), name, &sys.sys_root(), sys)
-        .map_err(|_| SystemError::ModuleFailed(name.into()))
+    prov.create_actor(
+        Props::new_args(A::create_args, args),
+        name,
+        &sys.sys_root(),
+        sys,
+    )
+    .map_err(|_| SystemError::ModuleFailed(name.into()))
 }
 
 fn sys_channels(prov: &Provider, sys: &ActorSystem) -> Result<SysChannels, SystemError> {

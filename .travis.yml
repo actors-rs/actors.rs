@@ -12,4 +12,3 @@ script:
   - cargo check --all --no-default-features
   - cargo test --all-features --all -- --nocapture
   - cd actors-macros; cargo test --no-default-features -- --nocapture; cd ..
-
