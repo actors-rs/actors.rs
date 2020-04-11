@@ -14,7 +14,7 @@ keywords = ["actor", "actors", "actor-model", "async", "cqrs", "event_sourcing"]
 travis-ci = { repository = "actors-rs/actors.rs" }
 
 [dependencies]
-riker-macros = { path = "riker-macros", version = "0.1" }
+riker-macros = "0.1.0"
 chrono = "0.4"
 config = "0.10"
 futures-preview = "0.3.0-alpha.19"
@@ -33,3 +33,6 @@ riker-testkit = "0.1.0"
 members = [
   "riker-macros"
 ]
+
+[patch.crates-io]
+riker-macros = { path = "riker-macros" }
