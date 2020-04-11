@@ -14,7 +14,7 @@ keywords = ["actor", "actors", "actor-model", "async", "cqrs", "event_sourcing"]
 travis-ci = { repository = "actors-rs/actors.rs" }
 
 [dependencies]
-actors-macros = "0.1.0"
+actors-macros = { path = "actors-macros", version = "0.1" }
 chrono = "0.4"
 config = "0.10"
 futures-preview = "0.3.0-alpha.19"
@@ -34,5 +34,5 @@ members = [
   "actors-macros"
 ]
 
-[patch.crates-io]
-actors-macros = { path = "actors-macros" }
+#[patch.crates-io]
+#actors-macros = { path = "actors-macros" }
