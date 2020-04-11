@@ -38,7 +38,7 @@ riker = "0.3.1"
 
 ```rust
 use std::time::Duration;
-use riker::actors::*;
+use actors::actors::*;
 
 #[derive(Default)]
 struct MyActor;

@@ -2,7 +2,7 @@ use std::fmt::Debug;
 use std::fmt;
 use std::marker::PhantomData;
 
-use riker_macros::{actor};
+use actors_macros::{actor};
 
 #[test]
 fn impls_test() {

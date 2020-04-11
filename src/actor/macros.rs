@@ -1,1 +1,1 @@
-pub use riker_macros::actor;
+pub use actors_macros::actor;

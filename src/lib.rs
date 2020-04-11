@@ -1,4 +1,4 @@
-#![crate_name = "riker"]
+#![crate_name = "actors"]
 
 // #![allow(warnings)] // toggle for easier compile error fixing
 

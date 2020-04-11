@@ -1,6 +1,6 @@
 use futures::executor::block_on;
 
-use riker::actors::*;
+use actors::actors::*;
 use slog::{Logger, Fuse, o};
 
 mod common {

@@ -22,7 +22,7 @@ impl Props {
     /// # Examples
     ///
     /// ```
-    /// # use riker::actors::*;
+    /// # use actors::actors::*;
     ///
     /// #[derive(Default)]
     /// struct User;
@@ -50,7 +50,7 @@ impl Props {
     /// # Examples
     /// An actor requiring a single parameter.
     /// ```
-    /// # use riker::actors::*;
+    /// # use actors::actors::*;
     ///
     /// struct User {
     ///     name: String,
@@ -73,7 +73,7 @@ impl Props {
     /// ```
     /// An actor requiring multiple parameters.
     /// ```
-    /// # use riker::actors::*;
+    /// # use actors::actors::*;
     ///
     /// struct BankAccount {
     ///     name: String,

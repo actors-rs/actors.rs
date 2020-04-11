@@ -1,11 +1,11 @@
 [package]
-name = "riker-macros"
+name = "actors-macros"
 version = "0.1.0"
-authors = ["Lee Smith <lee@riker.rs>"]
+authors = ["Lee Smith <lee@riker.rs>", "Olexiy Buyanskyy <olexiyb@gmail.com>"]
 edition = "2018"
 description = "Macro crate for Riker actor framework"
-homepage = "https://riker.rs"
-repository = "https://github.com/riker-rs/riker"
+homepage = "https://actors-rs.github.io"
+repository = "https://github.com/actors-rs/actors.rs"
 license = "MIT"
 readme = "README.md"
 keywords = ["actors", "actor-model", "async", "cqrs", "event_sourcing"]

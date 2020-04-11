@@ -91,7 +91,7 @@ impl<A: Actor + ?Sized> Actor for Box<A> {
 /// # Examples
 ///
 /// ```
-/// # use riker::actors::*;
+/// # use actors::actors::*;
 ///
 /// #[derive(Clone, Debug)]
 /// pub struct Foo;

@@ -1,6 +1,6 @@
 [package]
-name = "riker"
-version = "0.3.2"
+name = "actors"
+version = "0.1.0"
 authors = ["Lee Smith <lee@riker.rs>", "Olexiy Buyanskyy <olexiyb@gmail.com>"]
 edition = "2018"
 description = "Easily build fast, highly concurrent and resilient applications. An Actor Framework for Rust."
@@ -14,7 +14,7 @@ keywords = ["actor", "actors", "actor-model", "async", "cqrs", "event_sourcing"]
 travis-ci = { repository = "actors-rs/actors.rs" }
 
 [dependencies]
-riker-macros = "0.1.0"
+actors-macros = "0.1.0"
 chrono = "0.4"
 config = "0.10"
 futures-preview = "0.3.0-alpha.19"
@@ -31,8 +31,8 @@ riker-testkit = "0.1.0"
 
 [workspace]
 members = [
-  "riker-macros"
+  "actors-macros"
 ]
 
 [patch.crates-io]
-riker-macros = { path = "riker-macros" }
+actors-macros = { path = "actors-macros" }
