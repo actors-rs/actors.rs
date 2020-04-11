@@ -112,7 +112,7 @@ Riker adds to this by providing a familiar actor model API which in turn makes c
 
 ## Rust Version
 
-Riker is currently built using the **latest Rust Nightly**.
+Riker is currently built using the [stable](https://github.com/rust-lang/rust/blob/master/RELEASES.md) release.
 
 ## Contributing
 
