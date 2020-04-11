@@ -24,13 +24,8 @@ impl Props {
     /// ```
     /// # use riker::actors::*;
     ///
+    /// #[derive(Default)]
     /// struct User;
-    ///
-    /// impl User {
-    ///     fn actor() -> Self {
-    ///         User
-    ///     }
-    /// }
     ///
     /// # impl Actor for User {
     /// #    type Msg = String;
@@ -39,10 +34,8 @@ impl Props {
     /// // main
     /// let sys = ActorSystem::new().unwrap();
     ///
-    /// let props = Props::new(User::actor);
-    ///
     /// // start the actor and get an `ActorRef`
-    /// let actor = sys.actor_of(props, "user").unwrap();
+    /// let actor = sys.actor_of::<User>("user").unwrap();
     /// ```
     pub fn new<A, F>(creator: F) -> Arc<Mutex<impl ActorProducer<Actor = A>>>
     where
@@ -63,11 +56,9 @@ impl Props {
     ///     name: String,
     /// }
     ///
-    /// impl User {
-    ///     fn actor(name: String) -> Self {
-    ///         User {
-    ///             name
-    ///         }
+    /// impl ActorFactoryArgs<String> for User {
+    ///     fn create_args(name: String) -> Self {
+    ///         User { name }
     ///     }
     /// }
     ///
@@ -78,9 +69,7 @@ impl Props {
     /// // main
     /// let sys = ActorSystem::new().unwrap();
     ///
-    /// let props = Props::new_args(User::actor, "Naomi Nagata".into());
-    ///
-    /// let actor = sys.actor_of(props, "user").unwrap();
+    /// let actor = sys.actor_of_args::<User, _>("user", "Naomi Nagata".into()).unwrap();
     /// ```
     /// An actor requiring multiple parameters.
     /// ```
@@ -91,12 +80,9 @@ impl Props {
     ///     number: String,
     /// }
     ///
-    /// impl BankAccount {
-    ///     fn actor((name, number): (String, String)) -> Self {
-    ///         BankAccount {
-    ///             name,
-    ///             number
-    ///         }
+    /// impl ActorFactoryArgs<(String, String)> for BankAccount {
+    ///     fn create_args((name, number): (String, String)) -> Self {
+    ///         BankAccount { name, number }
     ///     }
     /// }
     ///
@@ -107,16 +93,13 @@ impl Props {
     /// // main
     /// let sys = ActorSystem::new().unwrap();
     ///
-    /// let props = Props::new_args(BankAccount::actor,
-    ///                             ("James Holden".into(), "12345678".into()));
-    ///
     /// // start the actor and get an `ActorRef`
-    /// let actor = sys.actor_of(props, "bank_account").unwrap();
+    /// let actor = sys.actor_of_args::<BankAccount, _>("bank_account", ("James Holden".into(), "12345678".into())).unwrap();
     /// ```
     pub fn new_args<A, Args, F>(creator: F, args: Args) -> Arc<Mutex<impl ActorProducer<Actor = A>>>
     where
         A: Actor + Send + 'static,
-        Args: ActorArgs + 'static,
+        Args: ActorArgs,
         F: Fn(Args) -> A + Send + 'static,
     {
         Arc::new(Mutex::new(ActorPropsWithArgs::new(creator, args)))
@@ -126,6 +109,20 @@ impl Props {
 /// A `Clone`, `Send` and `Sync` `ActorProducer`
 // pub type BoxActorProd<Msg> = Arc<Mutex<ActorProducer<Actor=BoxActor<Msg>>>>;
 pub type BoxActorProd<A> = Arc<Mutex<dyn ActorProducer<Actor = A>>>;
+
+pub trait ActorFactory: Actor {
+    fn create() -> Self;
+}
+
+pub trait ActorFactoryArgs<Args: ActorArgs>: Actor {
+    fn create_args(args: Args) -> Self;
+}
+
+impl<A: Default + Actor> ActorFactory for A {
+    fn create() -> Self {
+        A::default()
+    }
+}
 
 /// Represents the underlying Actor factory function for creating instances of `Actor`.
 ///
@@ -241,7 +238,7 @@ impl<A: Actor, Args: ActorArgs> RefUnwindSafe for ActorPropsWithArgs<A, Args> {}
 impl<A, Args> ActorPropsWithArgs<A, Args>
 where
     A: Actor + Send + 'static,
-    Args: ActorArgs + 'static,
+    Args: ActorArgs,
 {
     pub fn new<F>(creator: F, args: Args) -> impl ActorProducer<Actor = A>
     where
@@ -257,7 +254,7 @@ where
 impl<A, Args> ActorProducer for ActorPropsWithArgs<A, Args>
 where
     A: Actor + Send + 'static,
-    Args: ActorArgs + 'static,
+    Args: ActorArgs,
 {
     type Actor = A;
 
@@ -280,5 +277,5 @@ impl<A: Actor, Args: ActorArgs> fmt::Debug for ActorPropsWithArgs<A, Args> {
     }
 }
 
-pub trait ActorArgs: Clone + Send + Sync {}
-impl<T: Clone + Send + Sync> ActorArgs for T {}
+pub trait ActorArgs: Clone + Send + Sync + 'static {}
+impl<T: Clone + Send + Sync + 'static> ActorArgs for T {}
