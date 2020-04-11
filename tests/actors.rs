@@ -61,8 +61,17 @@ fn actor_create() {
 
     let props = Props::new(Counter::actor);
     assert!(sys.actor_of(props.clone(), "valid-name").is_ok());
-
-    assert!(sys.actor_of(props.clone(), "/").is_err());
+    match sys.actor_of(props.clone(), "/") {
+        Ok(_) => panic!("test should not reach here"),
+        Err(e) =>  {
+            // test Display
+            assert_eq!(e.to_string(), "Failed to create actor. Cause: Invalid actor name (/)");
+            assert_eq!(format!("{}", e), "Failed to create actor. Cause: Invalid actor name (/)");
+            // test Debug
+            assert_eq!(format!("{:?}", e), "InvalidName(\"/\")");
+            assert_eq!(format!("{:#?}", e), "InvalidName(\n    \"/\",\n)");
+        },
+    }
     assert!(sys.actor_of(props.clone(), "*").is_err());
     assert!(sys.actor_of(props.clone(), "/a/b/c").is_err());
     assert!(sys.actor_of(props.clone(), "@").is_err());
@@ -78,7 +87,7 @@ fn actor_tell() {
     let props = Props::new(Counter::actor);
     let actor = sys.actor_of(props, "me").unwrap();
 
-    let (probe, listen) = probe();
+    let (probe, _listen) = probe();
     actor.tell(TestProbe(probe), None);
 
     for _ in 0..1_000_000 {
@@ -96,7 +105,7 @@ fn actor_try_tell() {
     let actor = sys.actor_of(props, "me").unwrap();
     let actor: BasicActorRef = actor.into();
 
-    let (probe, listen) = probe();
+    let (probe, _listen) = probe();
     actor
         .try_tell(CounterMsg::TestProbe(TestProbe(probe)), None)
         .unwrap();
@@ -165,7 +174,6 @@ impl Actor for Child {
 }
 
 #[test]
-#[allow(dead_code)]
 fn actor_stop() {
     let system = ActorSystem::new().unwrap();
 
