@@ -1,6 +1,6 @@
 # Riker
 
-[![Build Status](https://travis-ci.org/riker-rs/riker.svg?branch=master)](https://travis-ci.org/riker-rs/riker)
+[![Build Status](https://travis-ci.org/actors-rs/actors.rs.svg?branch=master?branch=master)](https://travis-ci.org/github/actors-rs/actors.rs)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 [![crates.io](https://meritbadge.herokuapp.com/riker)](https://crates.io/crates/riker)
 [![Released API docs](https://docs.rs/riker/badge.svg)](https://docs.rs/riker)
