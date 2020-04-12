@@ -10,9 +10,9 @@ repos:
     hooks:
       - id: fmt
         name: rustfmt https://github.com/rust-lang/rustfmt/blob/master/README.md .
-      #      - id: clippy
-      #        args: ['']
-      #        name: cargo clippy https://github.com/rust-lang/rust-clippy/blob/master/README.md .
+      - id: clippy
+        args: ['']
+        name: cargo clippy https://github.com/rust-lang/rust-clippy/blob/master/README.md .
       - id: cargo-check
         name: cargo check https://doc.rust-lang.org/cargo/commands/cargo-check.html .
   - repo: https://github.com/pre-commit/pre-commit-hooks
