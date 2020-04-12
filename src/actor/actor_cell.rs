@@ -543,7 +543,7 @@ impl<Msg: Message> ActorRefFactory for Context<Msg> {
         A: ActorFactory,
     {
         self.system.provider.create_actor(
-            Props::new(A::create),
+            Props::new_no_args(A::create),
             name,
             &self.myself().into(),
             &self.system,

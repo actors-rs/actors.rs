@@ -7,8 +7,8 @@ use std::{
 use crate::{
     actor::actor_cell::{ActorCell, ExtendedCell},
     actor::*,
-    kernel::{kernel::kernel, mailbox::mailbox},
-    system::{system::SysActors, ActorSystem, SystemMsg},
+    kernel::{kernel, mailbox::mailbox},
+    system::{ActorSystem, SysActors, SystemMsg},
     validate::validate_name,
 };
 use slog::Logger;
@@ -216,8 +216,7 @@ struct Guardian {
 
 impl Guardian {
     fn new((name, log): (String, Logger)) -> Self {
-        let actor = Guardian { name, log };
-        actor
+        Guardian { name, log }
     }
 
     fn props(name: String, logger: Logger) -> BoxActorProd<Guardian> {
@@ -228,9 +227,9 @@ impl Guardian {
 impl Actor for Guardian {
     type Msg = SystemMsg;
 
-    fn recv(&mut self, _: &Context<Self::Msg>, _: Self::Msg, _: Option<BasicActorRef>) {}
-
     fn post_stop(&mut self) {
         trace!(self.log, "{} guardian stopped", self.name);
     }
+
+    fn recv(&mut self, _: &Context<Self::Msg>, _: Self::Msg, _: Option<BasicActorRef>) {}
 }

@@ -37,12 +37,12 @@ impl Props {
     /// // start the actor and get an `ActorRef`
     /// let actor = sys.actor_of::<User>("user").unwrap();
     /// ```
-    pub fn new<A, F>(creator: F) -> Arc<Mutex<impl ActorProducer<Actor = A>>>
+    pub fn new_no_args<A, F>(creator: F) -> Arc<Mutex<impl ActorProducer<Actor = A>>>
     where
         A: Actor + Send + 'static,
         F: Fn() -> A + Send + 'static,
     {
-        Arc::new(Mutex::new(ActorProps::new(creator)))
+        Arc::new(Mutex::new(ActorProps::new_producer(creator)))
     }
 
     /// Creates an `ActorProducer` with one or more factory method parameters.
@@ -102,7 +102,7 @@ impl Props {
         Args: ActorArgs,
         F: Fn(Args) -> A + Send + 'static,
     {
-        Arc::new(Mutex::new(ActorPropsWithArgs::new(creator, args)))
+        Arc::new(Mutex::new(ActorPropsWithArgs::new_producer(creator, args)))
     }
 }
 
@@ -193,7 +193,7 @@ impl<A> ActorProps<A>
 where
     A: Actor + Send + 'static,
 {
-    pub fn new<F>(creator: F) -> impl ActorProducer<Actor = A>
+    pub fn new_producer<F>(creator: F) -> impl ActorProducer<Actor = A>
     where
         F: Fn() -> A + Send + 'static,
     {
@@ -240,7 +240,7 @@ where
     A: Actor + Send + 'static,
     Args: ActorArgs,
 {
-    pub fn new<F>(creator: F, args: Args) -> impl ActorProducer<Actor = A>
+    pub fn new_producer<F>(creator: F, args: Args) -> impl ActorProducer<Actor = A>
     where
         F: Fn(Args) -> A + Send + 'static,
     {

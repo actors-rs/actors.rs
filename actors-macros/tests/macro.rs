@@ -6,7 +6,7 @@ use actors_macros::actor;
 
 #[test]
 fn impls_test() {
-    NewActorMsg::U32(1);
+    let _msg = NewActorMsg::U32(1);
 
     let _actor = ActorRef::<NewActorMsg> { x: PhantomData };
 
