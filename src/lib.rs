@@ -1,7 +1,5 @@
 #![crate_name = "actors"]
 
-// #![allow(warnings)] // toggle for easier compile error fixing
-
 mod validate;
 
 pub mod actor;

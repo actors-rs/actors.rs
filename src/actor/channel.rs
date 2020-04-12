@@ -1,5 +1,3 @@
-#![allow(unused_variables)]
-
 use std::{collections::HashMap, hash::Hash};
 
 use crate::{
@@ -40,7 +38,7 @@ where
     type Msg = ChannelMsg<Msg>;
 
     // todo subscribe to events to unsub subscribers when they die
-    fn pre_start(&mut self, ctx: &ChannelCtx<Msg>) {
+    fn pre_start(&mut self, _ctx: &ChannelCtx<Msg>) {
         // let sub = Subscribe {
         //     topic: SysTopic::ActorTerminated.into(),
         //     actor: Box::new(ctx.myself.clone())//.into()
@@ -57,7 +55,7 @@ where
     // We expect to receive ActorTerminated messages because we subscribed
     // to this system event. This allows us to remove actors that have been
     // terminated but did not explicity unsubscribe before terminating.
-    fn sys_recv(&mut self, _: &ChannelCtx<Msg>, msg: SystemMsg, sender: Sender) {
+    fn sys_recv(&mut self, _: &ChannelCtx<Msg>, msg: SystemMsg, _sender: Sender) {
         if let SystemMsg::Event(evt) = msg {
             if let SystemEvent::ActorTerminated(terminated) = evt {
                 let subs = self.subs.clone();
@@ -92,7 +90,7 @@ where
 {
     type Msg = ChannelMsg<Msg>;
 
-    fn receive(&mut self, ctx: &ChannelCtx<Msg>, msg: Subscribe<Msg>, sender: Sender) {
+    fn receive(&mut self, _ctx: &ChannelCtx<Msg>, msg: Subscribe<Msg>, _sender: Sender) {
         let subs = self.subs.entry(msg.topic).or_default();
         subs.push(msg.actor);
     }
@@ -104,7 +102,7 @@ where
 {
     type Msg = ChannelMsg<Msg>;
 
-    fn receive(&mut self, ctx: &ChannelCtx<Msg>, msg: Unsubscribe<Msg>, sender: Sender) {
+    fn receive(&mut self, _ctx: &ChannelCtx<Msg>, msg: Unsubscribe<Msg>, _sender: Sender) {
         unsubscribe(&mut self.subs, &msg.topic, &msg.actor);
     }
 }
@@ -115,7 +113,7 @@ where
 {
     type Msg = ChannelMsg<Msg>;
 
-    fn receive(&mut self, ctx: &ChannelCtx<Msg>, msg: UnsubscribeAll<Msg>, sender: Sender) {
+    fn receive(&mut self, _ctx: &ChannelCtx<Msg>, msg: UnsubscribeAll<Msg>, _sender: Sender) {
         let subs = self.subs.clone();
 
         for topic in subs.keys() {
@@ -130,7 +128,7 @@ where
 {
     type Msg = ChannelMsg<Msg>;
 
-    fn receive(&mut self, ctx: &ChannelCtx<Msg>, msg: Publish<Msg>, sender: Sender) {
+    fn receive(&mut self, _ctx: &ChannelCtx<Msg>, msg: Publish<Msg>, sender: Sender) {
         // send system event to actors subscribed to all topics
         if let Some(subs) = self.subs.get(&All.into()) {
             for sub in subs.iter() {
@@ -206,9 +204,9 @@ impl Receive<Publish<SystemEvent>> for EventsChannel {
 
     fn receive(
         &mut self,
-        ctx: &ChannelCtx<SystemEvent>,
+        _ctx: &ChannelCtx<SystemEvent>,
         msg: Publish<SystemEvent>,
-        sender: Sender,
+        _sender: Sender,
     ) {
         // send system event to actors subscribed to all topics
         if let Some(subs) = self.0.subs.get(&All.into()) {
@@ -336,7 +334,7 @@ impl<'a> From<&'a SystemEvent> for Topic {
 pub struct All;
 
 impl From<All> for Topic {
-    fn from(all: All) -> Self {
+    fn from(_all: All) -> Self {
         Topic::from("*")
     }
 }

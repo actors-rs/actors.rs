@@ -46,7 +46,6 @@ struct QueueReaderInner<Msg: Message> {
 }
 
 impl<Msg: Message> QueueReader<Msg> {
-    #[allow(dead_code)]
     pub fn dequeue(&self) -> Envelope<Msg> {
         let mut inner = self.inner.lock().unwrap();
         if let Some(item) = inner.next_item.take() {

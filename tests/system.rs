@@ -41,7 +41,6 @@ impl Actor for ShutdownTest {
 }
 
 #[test]
-#[allow(dead_code)]
 fn system_when_shutdown() {
     let sys = ActorSystem::new().unwrap();
 
@@ -56,7 +55,6 @@ fn system_when_shutdown() {
 }
 
 #[test]
-#[allow(dead_code)]
 fn system_shutdown() {
     let sys = ActorSystem::new().unwrap();
 

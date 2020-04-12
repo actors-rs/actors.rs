@@ -20,7 +20,6 @@ use std::{
 };
 
 // TODO: fix clippy issue https://github.com/actors-rs/actors.rs/issues/7
-#[allow(dead_code)]
 #[derive(Debug)]
 #[allow(clippy::large_enum_variant)]
 pub enum KernelMsg {

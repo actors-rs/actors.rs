@@ -230,7 +230,6 @@ impl SystemBuilder {
 /// and scheduling. The `ActorSystem` is the heart of a Riker application,
 /// starting serveral threads when it is created. Create only one instance
 /// of `ActorSystem` per application.
-#[allow(dead_code)]
 #[derive(Clone)]
 pub struct ActorSystem {
     proto: Arc<ProtoSystem>,
@@ -402,10 +401,9 @@ impl ActorSystem {
     }
 
     /// Returns the system root's actor reference
-    #[allow(dead_code)]
-    fn root(&self) -> &BasicActorRef {
-        &self.sys_actors.as_ref().unwrap().root
-    }
+    // fn root(&self) -> &BasicActorRef {
+    //     &self.sys_actors.as_ref().unwrap().root
+    // }
 
     /// Returns the user root actor reference
     pub fn user_root(&self) -> &BasicActorRef {
@@ -829,25 +827,24 @@ where
         .map_err(|_| SystemError::ModuleFailed(name.into()))
 }
 
-#[allow(dead_code)]
-fn sys_actor_of_args<A, Args>(
-    prov: &Provider,
-    sys: &ActorSystem,
-    name: &str,
-    args: Args,
-) -> Result<ActorRef<<A as Actor>::Msg>, SystemError>
-where
-    Args: ActorArgs,
-    A: ActorFactoryArgs<Args>,
-{
-    prov.create_actor(
-        Props::new_args(A::create_args, args),
-        name,
-        &sys.sys_root(),
-        sys,
-    )
-    .map_err(|_| SystemError::ModuleFailed(name.into()))
-}
+// fn sys_actor_of_args<A, Args>(
+//     prov: &Provider,
+//     sys: &ActorSystem,
+//     name: &str,
+//     args: Args,
+// ) -> Result<ActorRef<<A as Actor>::Msg>, SystemError>
+// where
+//     Args: ActorArgs,
+//     A: ActorFactoryArgs<Args>,
+// {
+//     prov.create_actor(
+//         Props::new_args(A::create_args, args),
+//         name,
+//         &sys.sys_root(),
+//         sys,
+//     )
+//     .map_err(|_| SystemError::ModuleFailed(name.into()))
+// }
 
 fn sys_channels(prov: &Provider, sys: &ActorSystem) -> Result<SysChannels, SystemError> {
     let sys_events = sys_actor_of::<EventsChannel>(prov, sys, "sys_events")?;
