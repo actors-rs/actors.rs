@@ -1,8 +1,11 @@
 #![crate_name = "actors"]
 #![deny(clippy::all)]
-// #![deny(clippy::pedantic)]
+#![deny(clippy::pedantic)]
 #![deny(clippy::nursery)]
 #![allow(clippy::fallible_impl_from)]
+#![allow(clippy::module_name_repetitions)]
+#![allow(clippy::pub_enum_variant_names)]
+#![allow(clippy::missing_errors_doc)]
 mod validate;
 
 pub mod actor;
@@ -18,6 +21,7 @@ use config::{Config, File};
 
 use crate::actor::BasicActorRef;
 
+#[must_use]
 pub fn load_config() -> Config {
     let mut cfg = Config::new();
 
@@ -89,8 +93,7 @@ impl AnyMessage {
         } else {
             match self.msg.as_ref() {
                 Some(m) if m.is::<T>() => Ok(m.downcast_ref::<T>().cloned().unwrap()),
-                Some(_) => Err(()),
-                None => Err(()),
+                Some(_) | None => Err(()),
             }
         }
     }

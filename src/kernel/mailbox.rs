@@ -181,7 +181,7 @@ where
     (sender, sys_sender, mailbox)
 }
 
-pub fn run_mailbox<A>(mbox: Mailbox<A::Msg>, ctx: Context<A::Msg>, mut dock: Dock<A>)
+pub fn run_mailbox<A>(mbox: &Mailbox<A::Msg>, ctx: &Context<A::Msg>, mut dock: Dock<A>)
 where
     A: Actor,
 {
@@ -194,13 +194,13 @@ where
     let mut actor = dock.actor.lock().unwrap().take();
     let cell = &mut dock.cell;
 
-    process_sys_msgs(&mbox, &ctx, cell, &mut actor);
+    process_sys_msgs(mbox, ctx, cell, &mut actor);
 
     if actor.is_some() && !mbox.is_suspended() {
-        process_msgs(&mbox, &ctx, cell, &mut actor);
+        process_msgs(mbox, ctx, cell, &mut actor);
     }
 
-    process_sys_msgs(&mbox, &ctx, cell, &mut actor);
+    process_sys_msgs(mbox, ctx, cell, &mut actor);
 
     if actor.is_some() {
         let mut a = dock.actor.lock().unwrap();
@@ -227,20 +227,16 @@ fn process_msgs<A>(
 
     loop {
         if count < mbox.msg_process_limit() {
-            match mbox.try_dequeue() {
-                Ok(msg) => {
-                    match (msg.msg, msg.sender) {
-                        (msg, sender) => {
-                            actor.as_mut().unwrap().recv(ctx, msg, sender);
-                            process_sys_msgs(mbox, ctx, cell, actor);
-                        } // (ActorMsg::Identify, sender) => handle_identify(sender, cell),
-                    }
-
-                    count += 1;
+            if let Ok(msg) = mbox.try_dequeue() {
+                match (msg.msg, msg.sender) {
+                    (msg, sender) => {
+                        actor.as_mut().unwrap().recv(ctx, msg, sender);
+                        process_sys_msgs(mbox, ctx, cell, actor);
+                    } // (ActorMsg::Identify, sender) => handle_identify(sender, cell),
                 }
-                Err(_) => {
-                    break;
-                }
+                count += 1;
+            } else {
+                break;
             }
         } else {
             break;
@@ -265,12 +261,12 @@ fn process_sys_msgs<A>(
         sys_msgs.push(sys_msg);
     }
 
-    for msg in sys_msgs.into_iter() {
+    for msg in sys_msgs {
         match msg.msg {
             SystemMsg::ActorInit => handle_init(mbox, ctx, cell, actor),
-            SystemMsg::Command(cmd) => cell.receive_cmd(cmd, actor),
+            SystemMsg::Command(cmd) => cell.receive_cmd(&cmd, actor),
             SystemMsg::Event(evt) => handle_evt(evt, ctx, cell, actor),
-            SystemMsg::Failed(failed) => handle_failed(failed, cell, actor),
+            SystemMsg::Failed(failed) => handle_failed(&failed, cell, actor),
         }
     }
 }
@@ -302,11 +298,11 @@ fn handle_init<A>(
     actor.as_mut().unwrap().post_start(ctx);
 }
 
-fn handle_failed<A>(failed: BasicActorRef, cell: &ExtendedCell<A::Msg>, actor: &mut Option<A>)
+fn handle_failed<A>(failed: &BasicActorRef, cell: &ExtendedCell<A::Msg>, actor: &mut Option<A>)
 where
     A: Actor,
 {
-    cell.handle_failure(failed, actor.as_mut().unwrap().supervisor_strategy())
+    cell.handle_failure(failed, &actor.as_mut().unwrap().supervisor_strategy())
 }
 
 fn handle_evt<A>(
@@ -383,7 +379,7 @@ pub struct MailboxConfig {
 impl<'a> From<&'a Config> for MailboxConfig {
     fn from(cfg: &Config) -> Self {
         Self {
-            msg_process_limit: cfg.get_int("mailbox.msg_process_limit").unwrap() as u32,
+            msg_process_limit: cfg.get::<u32>("mailbox.msg_process_limit").unwrap(),
         }
     }
 }

@@ -8,6 +8,7 @@ pub type ActorId = usize;
 pub struct ActorPath(Arc<String>);
 
 impl ActorPath {
+    #[must_use]
     pub fn new(path: &str) -> Self {
         Self(Arc::new(path.to_string()))
     }

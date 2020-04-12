@@ -98,6 +98,7 @@ pub struct BasicTimer {
 }
 
 impl BasicTimer {
+    #[must_use]
     pub fn start(cfg: &Config) -> TimerRef {
         let cfg = BasicTimerConfig::from(cfg);
 
@@ -132,18 +133,18 @@ impl BasicTimer {
             .partition(|j| Instant::now() >= j.send_at);
 
         // send those messages where the 'send_at' time has been reached or elapsed
-        for job in send.into_iter() {
+        for job in send {
             job.send();
         }
 
         // for those messages that are not to be sent yet, just put them back on the vec
-        for job in keep.into_iter() {
+        for job in keep {
             self.once_jobs.push(job);
         }
     }
 
     pub fn execute_repeat_jobs(&mut self) {
-        for job in self.repeat_jobs.iter_mut() {
+        for job in &mut self.repeat_jobs {
             if Instant::now() >= job.send_at {
                 job.send_at = Instant::now() + job.interval;
                 job.send();
@@ -187,7 +188,7 @@ struct BasicTimerConfig {
 impl<'a> From<&'a Config> for BasicTimerConfig {
     fn from(config: &Config) -> Self {
         Self {
-            frequency_millis: config.get_int("scheduler.frequency_millis").unwrap() as u64,
+            frequency_millis: config.get::<u64>("scheduler.frequency_millis").unwrap(),
         }
     }
 }

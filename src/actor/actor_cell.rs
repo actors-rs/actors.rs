@@ -154,7 +154,8 @@ impl ActorCell {
         self.inner.children.iter().any(|child| child == *actor)
     }
 
-    pub(crate) fn stop(&self, actor: BasicActorRef) {
+    #[allow(clippy::unused_self)]
+    pub(crate) fn stop(&self, actor: &BasicActorRef) {
         actor.sys_tell(SystemCmd::Stop.into());
     }
 
@@ -178,7 +179,7 @@ impl ActorCell {
         self.inner.children.remove(actor)
     }
 
-    pub fn receive_cmd<A: Actor>(&self, cmd: SystemCmd, actor: &mut Option<A>) {
+    pub fn receive_cmd<A: Actor>(&self, cmd: &SystemCmd, actor: &mut Option<A>) {
         match cmd {
             SystemCmd::Stop => self.terminate(actor),
             SystemCmd::Restart => self.restart(),
@@ -192,24 +193,24 @@ impl ActorCell {
 
         self.inner.is_terminating.store(true, Ordering::Relaxed);
 
-        if !self.has_children() {
+        if self.has_children() {
+            for child in Box::new(self.inner.children.iter().clone()) {
+                self.stop(&child.clone());
+            }
+        } else {
             self.kernel().terminate(&self.inner.system);
             post_stop(actor);
-        } else {
-            for child in Box::new(self.inner.children.iter().clone()) {
-                self.stop(child.clone());
-            }
         }
     }
 
     pub fn restart(&self) {
-        if !self.has_children() {
-            self.kernel().restart(&self.inner.system);
-        } else {
+        if self.has_children() {
             self.inner.is_restarting.store(true, Ordering::Relaxed);
             for child in Box::new(self.inner.children.iter().clone()) {
-                self.stop(child.clone());
+                self.stop(&child.clone());
             }
+        } else {
+            self.kernel().restart(&self.inner.system);
         }
     }
 
@@ -233,7 +234,7 @@ impl ActorCell {
         }
     }
 
-    pub fn handle_failure(&self, failed: BasicActorRef, strategy: Strategy) {
+    pub fn handle_failure(&self, failed: &BasicActorRef, strategy: &Strategy) {
         match strategy {
             Strategy::Stop => self.stop(failed),
             Strategy::Restart => self.restart_child(failed),
@@ -241,7 +242,8 @@ impl ActorCell {
         }
     }
 
-    pub fn restart_child(&self, actor: BasicActorRef) {
+    #[allow(clippy::unused_self)]
+    pub fn restart_child(&self, actor: &BasicActorRef) {
         actor.sys_tell(SystemCmd::Restart.into());
     }
 
@@ -462,11 +464,11 @@ where
         &self.cell.inner.system
     }
 
-    pub(crate) fn handle_failure(&self, failed: BasicActorRef, strategy: Strategy) {
+    pub(crate) fn handle_failure(&self, failed: &BasicActorRef, strategy: &Strategy) {
         self.cell.handle_failure(failed, strategy)
     }
 
-    pub(crate) fn receive_cmd<A: Actor>(&self, cmd: SystemCmd, actor: &mut Option<A>) {
+    pub(crate) fn receive_cmd<A: Actor>(&self, cmd: &SystemCmd, actor: &mut Option<A>) {
         self.cell.receive_cmd(cmd, actor)
     }
 
@@ -674,6 +676,7 @@ where
         M: Message,
     {
         let delay = std::cmp::max(time.timestamp() - Utc::now().timestamp(), 0 as i64);
+        #[allow(clippy::cast_sign_loss)]
         let delay = Duration::from_secs(delay as u64);
 
         let id = Uuid::new_v4();

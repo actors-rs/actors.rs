@@ -92,7 +92,7 @@ where
 
     /// Actor path.
     ///
-    /// e.g. `/user/actor_a/actor_b
+    /// e.g. `/user/actor_a/actor_b`
     fn path(&self) -> &ActorPath {
         (**self).path()
     }
@@ -173,10 +173,12 @@ pub struct BasicActorRef {
 
 impl BasicActorRef {
     #[doc(hidden)]
+    #[must_use]
     pub const fn new(cell: ActorCell) -> Self {
         Self { cell }
     }
 
+    #[allow(clippy::unused_self)]
     pub fn typed<Msg: Message>(&self, cell: ExtendedCell<Msg>) -> ActorRef<Msg> {
         ActorRef { cell }
     }
@@ -347,7 +349,7 @@ pub type Sender = Option<BasicActorRef>;
 /// A lightweight, typed reference to interact with its underlying
 /// actor instance through concurrent messaging.
 ///
-/// All ActorRefs are products of `system.actor_of`
+/// All `ActorRefs` are products of `system.actor_of`
 /// or `context.actor_of`. When an actor is created using `actor_of`
 /// an `ActorRef<Msg>` is returned, where `Msg` is the mailbox
 /// message type for the actor.

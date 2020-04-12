@@ -56,7 +56,7 @@ where
     let kr = KernelRef { tx };
 
     let mut sys = sys.clone();
-    let mut asys = sys.clone();
+    let mut child_sys = sys.clone();
     let akr = kr.clone();
     let actor = start_actor(&props)?;
     let cell = cell.init(&kr);
@@ -74,25 +74,26 @@ where
                 KernelMsg::RunActor => {
                     let ctx = Context {
                         myself: actor_ref.clone(),
-                        system: asys.clone(),
+                        system: child_sys.clone(),
                         kernel: akr.clone(),
                     };
 
                     let mb = mailbox.clone();
                     let d = dock.clone();
 
-                    let _ = std::panic::catch_unwind(AssertUnwindSafe(|| run_mailbox(mb, ctx, d)));
+                    let _ =
+                        std::panic::catch_unwind(AssertUnwindSafe(|| run_mailbox(&mb, &ctx, d)));
                     //.unwrap();
                 }
                 KernelMsg::RestartActor => {
-                    restart_actor(&dock, actor_ref.clone().into(), &props, &asys);
+                    restart_actor(&dock, actor_ref.clone().into(), &props, &child_sys);
                 }
                 KernelMsg::TerminateActor => {
-                    terminate_actor(&mailbox, actor_ref.clone().into(), &asys);
+                    terminate_actor(&mailbox, actor_ref.clone().into(), &child_sys);
                     break;
                 }
                 KernelMsg::Sys(s) => {
-                    asys = s;
+                    child_sys = s;
                 }
             }
         }
@@ -111,15 +112,12 @@ fn restart_actor<A>(
     A: Actor,
 {
     let mut a = dock.actor.lock().unwrap();
-    match start_actor(props) {
-        Ok(actor) => {
-            *a = Some(actor);
-            actor_ref.sys_tell(SystemMsg::ActorInit);
-            sys.publish_event(ActorRestarted { actor: actor_ref }.into());
-        }
-        Err(_) => {
-            warn!(sys.log(), "Actor failed to restart: {:?}", actor_ref);
-        }
+    if let Ok(actor) = start_actor(props) {
+        *a = Some(actor);
+        actor_ref.sys_tell(SystemMsg::ActorInit);
+        sys.publish_event(ActorRestarted { actor: actor_ref }.into());
+    } else {
+        warn!(sys.log(), "Actor failed to restart: {:?}", actor_ref);
     }
 }
 

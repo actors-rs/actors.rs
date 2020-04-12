@@ -181,6 +181,7 @@ pub struct SystemBuilder {
 }
 
 impl SystemBuilder {
+    #[must_use]
     pub fn new() -> Self {
         Self::default()
     }
@@ -191,9 +192,10 @@ impl SystemBuilder {
         let exec = self.exec.unwrap_or_else(|| default_exec(&cfg));
         let log = self.log.unwrap_or_else(|| default_log(&cfg));
 
-        ActorSystem::create(&name, exec, log, cfg)
+        ActorSystem::create(&name, exec, log, &cfg)
     }
 
+    #[must_use]
     pub fn name(self, name: &str) -> Self {
         Self {
             name: Some(name.to_string()),
@@ -201,6 +203,7 @@ impl SystemBuilder {
         }
     }
 
+    #[must_use]
     pub fn cfg(self, cfg: Config) -> Self {
         Self {
             cfg: Some(cfg),
@@ -208,6 +211,7 @@ impl SystemBuilder {
         }
     }
 
+    #[must_use]
     pub fn exec(self, exec: ThreadPool) -> Self {
         Self {
             exec: Some(exec),
@@ -215,6 +219,7 @@ impl SystemBuilder {
         }
     }
 
+    #[must_use]
     pub fn log(self, log: Logger) -> Self {
         Self {
             log: Some(log),
@@ -251,7 +256,7 @@ impl ActorSystem {
         let exec = default_exec(&cfg);
         let log = default_log(&cfg);
 
-        Self::create("riker", exec, log, cfg)
+        Self::create("riker", exec, log, &cfg)
     }
 
     /// Create a new `ActorSystem` instance with provided name
@@ -262,18 +267,23 @@ impl ActorSystem {
         let exec = default_exec(&cfg);
         let log = default_log(&cfg);
 
-        Self::create(name, exec, log, cfg)
+        Self::create(name, exec, log, &cfg)
     }
 
     /// Create a new `ActorSystem` instance bypassing default config behavior
-    pub fn with_config(name: &str, cfg: Config) -> Result<Self, SystemError> {
-        let exec = default_exec(&cfg);
-        let log = default_log(&cfg);
+    pub fn with_config(name: &str, cfg: &Config) -> Result<Self, SystemError> {
+        let exec = default_exec(cfg);
+        let log = default_log(cfg);
 
         Self::create(name, exec, log, cfg)
     }
 
-    fn create(name: &str, exec: ThreadPool, log: Logger, cfg: Config) -> Result<Self, SystemError> {
+    fn create(
+        name: &str,
+        exec: ThreadPool,
+        log: Logger,
+        cfg: &Config,
+    ) -> Result<Self, SystemError> {
         validate_name(name).map_err(|_| SystemError::InvalidName(name.into()))?;
         // Process Configuration
         let debug = cfg.get_bool("debug").unwrap();
@@ -284,7 +294,7 @@ impl ActorSystem {
         }
 
         let prov = Provider::new(log.clone());
-        let timer = BasicTimer::start(&cfg);
+        let timer = BasicTimer::start(cfg);
 
         // 1. create proto system
         let proto = ProtoSystem {
@@ -292,7 +302,7 @@ impl ActorSystem {
             name: name.to_string(),
             host: Arc::new("localhost".to_string()),
             config: cfg.clone(),
-            sys_settings: SystemSettings::from(&cfg),
+            sys_settings: SystemSettings::from(cfg),
             started_at: Utc::now(),
         };
 
@@ -332,11 +342,12 @@ impl ActorSystem {
     }
 
     /// Returns the system start date
-    pub fn start_date(&self) -> &DateTime<Utc> {
+    fn start_date(&self) -> &DateTime<Utc> {
         &self.proto.started_at
     }
 
     /// Returns the number of seconds since the system started
+    #[allow(clippy::cast_sign_loss)]
     pub fn uptime(&self) -> u64 {
         let now = Utc::now();
         now.time()
@@ -375,26 +386,26 @@ impl ActorSystem {
         fn get_node(
             mut tree_str: &mut String,
             sys: &ActorSystem,
-            node: BasicActorRef,
+            node: &BasicActorRef,
             indent: &str,
         ) -> String {
             if node.is_root() {
                 tree_str.push_str(&format!("{}\n", sys.name()));
 
                 for actor in node.children() {
-                    get_node(&mut tree_str, sys, actor, "");
+                    get_node(&mut tree_str, sys, &actor, "");
                 }
             } else {
-                tree_str.push_str(&format!("{}└─ {}\n", indent, node.name()));
+                tree_str.push_str(&format!("{}\u{2514}\u{2500} {}\n", indent, node.name()));
 
                 for actor in node.children() {
-                    get_node(tree_str, sys, actor, &(indent.to_string() + "   "));
+                    get_node(tree_str, sys, &actor, &(indent.to_string() + "   "));
                 }
             }
             (*tree_str).to_string()
         }
 
-        get_node(&mut tree_str, self, root, "")
+        get_node(&mut tree_str, self, &root, "")
     }
 
     /// Returns the system root's actor reference
@@ -655,7 +666,6 @@ impl ActorSelectionFactory for ActorSystem {
     fn select(&self, path: &str) -> Result<ActorSelection, InvalidPath> {
         let anchor = self.user_root();
         let (anchor, path_str) = if path.starts_with('/') {
-            let anchor = self.user_root();
             let anchor_path = format!("{}/", anchor.path().deref().clone());
             let path = path.to_string().replace(&anchor_path, "");
 
@@ -771,6 +781,7 @@ impl Timer for ActorSystem {
         M: Message,
     {
         let delay = std::cmp::max(time.timestamp() - Utc::now().timestamp(), 0 as i64);
+        #[allow(clippy::cast_sign_loss)]
         let delay = Duration::from_secs(delay as u64);
 
         let id = Uuid::new_v4();
@@ -862,7 +873,7 @@ pub struct SystemSettings {
 impl<'a> From<&'a Config> for SystemSettings {
     fn from(config: &Config) -> Self {
         Self {
-            msg_process_limit: config.get_int("mailbox.msg_process_limit").unwrap() as u32,
+            msg_process_limit: config.get::<u32>("mailbox.msg_process_limit").unwrap(),
         }
     }
 }
@@ -874,7 +885,7 @@ struct ThreadPoolConfig {
 impl<'a> From<&'a Config> for ThreadPoolConfig {
     fn from(config: &Config) -> Self {
         Self {
-            pool_size: config.get_int("dispatcher.pool_size").unwrap() as usize,
+            pool_size: config.get::<usize>("dispatcher.pool_size").unwrap(),
         }
     }
 }
