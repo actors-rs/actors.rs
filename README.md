@@ -10,6 +10,7 @@
 
 <!-- toc -->
 
++ [Attention](#attention)
 + [Overview](#overview)
 + [Example](#example)
 + [Associated Projects](#associated-projects)
@@ -22,6 +23,11 @@
 <!-- tocstop -->
 
 <!-- prettier-ignore-end -->
+
+## Attention
+
+This fork is WIP at this moment. Some changes may already be out of sync with documentation.
+Hopefully I will stabilize API during several weeks
 
 ## Overview
 
@@ -48,7 +54,7 @@ Riker provides:
 
 ```toml
 [dependencies]
-riker = "0.3.1"
+actors = "0.1"
 ```
 
 `main.rs`:
