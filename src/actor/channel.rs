@@ -25,7 +25,7 @@ pub struct Channel<Msg: Message> {
 
 impl<Msg: Message> Default for Channel<Msg> {
     fn default() -> Self {
-        Channel {
+        Self {
             subs: HashMap::new(),
         }
     }
@@ -310,22 +310,22 @@ pub struct Topic(String);
 
 impl<'a> From<&'a str> for Topic {
     fn from(topic: &str) -> Self {
-        Topic(topic.to_string())
+        Self(topic.to_string())
     }
 }
 
 impl From<String> for Topic {
     fn from(topic: String) -> Self {
-        Topic(topic)
+        Self(topic)
     }
 }
 
 impl<'a> From<&'a SystemEvent> for Topic {
     fn from(evt: &SystemEvent) -> Self {
         match *evt {
-            SystemEvent::ActorCreated(_) => Topic::from("actor.created"),
-            SystemEvent::ActorTerminated(_) => Topic::from("actor.terminated"),
-            SystemEvent::ActorRestarted(_) => Topic::from("actor.restarted"),
+            SystemEvent::ActorCreated(_) => Self::from("actor.created"),
+            SystemEvent::ActorTerminated(_) => Self::from("actor.terminated"),
+            SystemEvent::ActorRestarted(_) => Self::from("actor.restarted"),
         }
     }
 }
@@ -335,7 +335,7 @@ pub struct All;
 
 impl From<All> for Topic {
     fn from(_all: All) -> Self {
-        Topic::from("*")
+        Self::from("*")
     }
 }
 
@@ -349,9 +349,9 @@ pub enum SysTopic {
 impl From<SysTopic> for Topic {
     fn from(evt: SysTopic) -> Self {
         match evt {
-            SysTopic::ActorCreated => Topic::from("actor.created"),
-            SysTopic::ActorTerminated => Topic::from("actor.terminated"),
-            SysTopic::ActorRestarted => Topic::from("actor.restarted"),
+            SysTopic::ActorCreated => Self::from("actor.created"),
+            SysTopic::ActorTerminated => Self::from("actor.terminated"),
+            SysTopic::ActorRestarted => Self::from("actor.restarted"),
         }
     }
 }

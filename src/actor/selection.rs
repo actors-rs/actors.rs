@@ -44,7 +44,7 @@ impl ActorSelection {
         anchor: BasicActorRef,
         // dl: &BasicActorRef,
         path: String,
-    ) -> Result<ActorSelection, InvalidPath> {
+    ) -> Result<Self, InvalidPath> {
         validate_path(&path)?;
 
         let path_vec: Vec<Selection> = path
@@ -58,7 +58,7 @@ impl ActorSelection {
             })
             .collect();
 
-        Ok(ActorSelection {
+        Ok(Self {
             anchor,
             // dl: dl.clone(),
             path_vec,
@@ -105,7 +105,7 @@ impl ActorSelection {
                         }
                     } else if path_vec.peek().is_some() && child.is_some() {
                         walk(
-                            &child.as_ref().unwrap(),
+                            child.as_ref().unwrap(),
                             // dl,
                             path_vec,
                             msg,
@@ -165,7 +165,7 @@ impl ActorSelection {
                         }
                     } else if path_vec.peek().is_some() && child.is_some() {
                         walk(
-                            &child.as_ref().unwrap(),
+                            child.as_ref().unwrap(),
                             // dl,
                             path_vec,
                             msg,

@@ -61,8 +61,8 @@ impl ActorCell {
         // perconf: Option<PersistenceConf>,
         mailbox: Arc<dyn AnySender>,
         sys_mailbox: MailboxSender<SystemMsg>,
-    ) -> ActorCell {
-        ActorCell {
+    ) -> Self {
+        Self {
             inner: Arc::new(ActorCellInner {
                 uid,
                 uri,
@@ -85,13 +85,13 @@ impl ActorCell {
         }
     }
 
-    pub(crate) fn init(self, kernel: &KernelRef) -> ActorCell {
+    pub(crate) fn init(self, kernel: &KernelRef) -> Self {
         let inner = ActorCellInner {
             kernel: Some(kernel.clone()),
             ..self.inner.deref().clone()
         };
 
-        ActorCell {
+        Self {
             inner: Arc::new(inner),
         }
     }
@@ -214,7 +214,7 @@ impl ActorCell {
     }
 
     pub fn death_watch<A: Actor>(&self, terminated: &BasicActorRef, actor: &mut Option<A>) {
-        if self.is_child(&terminated) {
+        if self.is_child(terminated) {
             self.remove_child(terminated);
 
             if !self.has_children() {
@@ -309,8 +309,7 @@ impl TmpActorRefFactory for ActorCell {
         &self,
         _props: BoxActorProd<A>,
     ) -> Result<ActorRef<A::Msg>, CreateError> {
-        let name = rand::random::<u64>();
-        let _name = format!("{}", name);
+        let _name = format!("{}", rand::random::<u64>());
 
         // self.inner
         //     .kernel
@@ -319,8 +318,7 @@ impl TmpActorRefFactory for ActorCell {
     }
 
     fn tmp_actor_of<A: ActorFactory>(&self) -> Result<ActorRef<<A as Actor>::Msg>, CreateError> {
-        let name = rand::random::<u64>();
-        let _name = format!("{}", name);
+        let _name = format!("{}", rand::random::<u64>());
 
         // self.inner
         //     .kernel
@@ -336,8 +334,7 @@ impl TmpActorRefFactory for ActorCell {
         Args: ActorArgs,
         A: ActorFactoryArgs<Args>,
     {
-        let name = rand::random::<u64>();
-        let _name = format!("{}", name);
+        let _name = format!("{}", rand::random::<u64>());
 
         // self.inner
         //     .kernel
@@ -388,13 +385,13 @@ where
             }),
         };
 
-        ExtendedCell { cell, mailbox }
+        Self { cell, mailbox }
     }
 
     pub(crate) fn init(self, kernel: &KernelRef) -> Self {
         let cell = self.cell.init(kernel);
 
-        ExtendedCell { cell, ..self }
+        Self { cell, ..self }
     }
 
     pub fn myself(&self) -> ActorRef<Msg> {
@@ -437,7 +434,7 @@ where
         let mb = &self.mailbox;
         let k = self.cell.kernel();
 
-        dispatch(msg, mb, k, &self.system()).map_err(|e| {
+        dispatch(msg, mb, k, self.system()).map_err(|e| {
             let dl = e.clone(); // clone the failed message and send to dead letters
             let dl = DeadLetter {
                 msg: format!("{:?}", dl.msg.msg),
@@ -705,8 +702,9 @@ pub struct Children {
 }
 
 impl Children {
-    pub fn new() -> Children {
-        Children {
+    #[allow(clippy::missing_const_for_fn)]
+    pub fn new() -> Self {
+        Self {
             actors: Arc::new(RwLock::new(HashMap::new())),
         }
     }
@@ -726,7 +724,7 @@ impl Children {
         self.actors.read().unwrap().len()
     }
 
-    pub fn iter(&self) -> ChildrenIterator {
+    pub const fn iter(&self) -> ChildrenIterator {
         ChildrenIterator {
             children: self,
             position: 0,

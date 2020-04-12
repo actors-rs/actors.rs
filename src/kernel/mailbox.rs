@@ -151,25 +151,25 @@ pub fn mailbox<Msg>(
 where
     Msg: Message,
 {
-    let (qw, qr) = queue::<Msg>();
-    let (sqw, sqr) = queue::<SystemMsg>();
+    let (a_qwriter, a_qreader) = queue::<Msg>();
+    let (s_qwriter, s_qreader) = queue::<SystemMsg>();
 
     let scheduled = Arc::new(AtomicBool::new(false));
 
     let sender = MailboxSender {
-        queue: qw,
+        queue: a_qwriter,
         scheduled: scheduled.clone(),
     };
 
     let sys_sender = MailboxSender {
-        queue: sqw,
+        queue: s_qwriter,
         scheduled: scheduled.clone(),
     };
 
     let mailbox = MailboxInner {
         msg_process_limit,
-        queue: qr,
-        sys_queue: sqr,
+        queue: a_qreader,
+        sys_queue: s_qreader,
         suspended: Arc::new(AtomicBool::new(true)),
         scheduled,
     };
@@ -232,7 +232,7 @@ fn process_msgs<A>(
                     match (msg.msg, msg.sender) {
                         (msg, sender) => {
                             actor.as_mut().unwrap().recv(ctx, msg, sender);
-                            process_sys_msgs(&mbox, &ctx, cell, actor);
+                            process_sys_msgs(mbox, ctx, cell, actor);
                         } // (ActorMsg::Identify, sender) => handle_identify(sender, cell),
                     }
 
@@ -382,7 +382,7 @@ pub struct MailboxConfig {
 
 impl<'a> From<&'a Config> for MailboxConfig {
     fn from(cfg: &Config) -> Self {
-        MailboxConfig {
+        Self {
             msg_process_limit: cfg.get_int("mailbox.msg_process_limit").unwrap() as u32,
         }
     }

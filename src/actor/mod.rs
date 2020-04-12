@@ -39,8 +39,8 @@ pub struct MsgError<T> {
 }
 
 impl<T> MsgError<T> {
-    pub fn new(msg: T) -> Self {
-        MsgError { msg }
+    pub const fn new(msg: T) -> Self {
+        Self { msg }
     }
 }
 
@@ -57,8 +57,8 @@ pub struct TryMsgError<T> {
 }
 
 impl<T> TryMsgError<T> {
-    pub fn new(msg: T) -> Self {
-        TryMsgError { msg }
+    pub const fn new(msg: T) -> Self {
+        Self { msg }
     }
 }
 
@@ -80,15 +80,15 @@ pub enum CreateError {
 impl fmt::Display for CreateError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            CreateError::Panicked => {
+            Self::Panicked => {
                 f.write_str("Failed to create actor. Cause: Actor panicked while starting")
             }
-            CreateError::System => f.write_str("Failed to create actor. Cause: System failure"),
-            CreateError::InvalidName(ref name) => f.write_str(&format!(
+            Self::System => f.write_str("Failed to create actor. Cause: System failure"),
+            Self::InvalidName(ref name) => f.write_str(&format!(
                 "Failed to create actor. Cause: Invalid actor name ({})",
                 name
             )),
-            CreateError::AlreadyExists(ref path) => f.write_str(&format!(
+            Self::AlreadyExists(ref path) => f.write_str(&format!(
                 "Failed to create actor. Cause: An actor at the same path already exists ({})",
                 path
             )),
@@ -97,8 +97,8 @@ impl fmt::Display for CreateError {
 }
 
 impl From<InvalidName> for CreateError {
-    fn from(err: InvalidName) -> CreateError {
-        CreateError::InvalidName(err.name)
+    fn from(err: InvalidName) -> Self {
+        Self::InvalidName(err.name)
     }
 }
 

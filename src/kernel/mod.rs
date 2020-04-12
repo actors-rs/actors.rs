@@ -35,8 +35,8 @@ pub struct Dock<A: Actor> {
 }
 
 impl<A: Actor> Clone for Dock<A> {
-    fn clone(&self) -> Dock<A> {
-        Dock {
+    fn clone(&self) -> Self {
+        Self {
             actor: self.actor.clone(),
             cell: self.cell.clone(),
         }

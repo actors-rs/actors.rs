@@ -31,7 +31,7 @@ impl Provider {
             counter: 100, // ActorIds start at 100
         };
 
-        Provider {
+        Self {
             inner: Arc::new(Mutex::new(inner)),
             log,
         }
@@ -216,11 +216,11 @@ struct Guardian {
 
 impl Guardian {
     fn new((name, log): (String, Logger)) -> Self {
-        Guardian { name, log }
+        Self { name, log }
     }
 
-    fn props(name: String, logger: Logger) -> BoxActorProd<Guardian> {
-        Props::new_args(Guardian::new, (name, logger))
+    fn props(name: String, logger: Logger) -> BoxActorProd<Self> {
+        Props::new_args(Self::new, (name, logger))
     }
 }
 

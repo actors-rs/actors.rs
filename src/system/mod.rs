@@ -142,11 +142,11 @@ pub enum SystemError {
 impl fmt::Display for SystemError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
-            SystemError::ModuleFailed(ref m) => f.write_str(&format!(
+            Self::ModuleFailed(ref m) => f.write_str(&format!(
                 "Failed to create actor system. Cause: Sub module failed to start ({})",
                 m
             )),
-            SystemError::InvalidName(ref name) => f.write_str(&format!(
+            Self::InvalidName(ref name) => f.write_str(&format!(
                 "Failed to create actor system. Cause: Invalid actor system name ({})",
                 name
             )),
@@ -182,7 +182,7 @@ pub struct SystemBuilder {
 
 impl SystemBuilder {
     pub fn new() -> Self {
-        SystemBuilder::default()
+        Self::default()
     }
 
     pub fn create(self) -> Result<ActorSystem, SystemError> {
@@ -195,28 +195,28 @@ impl SystemBuilder {
     }
 
     pub fn name(self, name: &str) -> Self {
-        SystemBuilder {
+        Self {
             name: Some(name.to_string()),
             ..self
         }
     }
 
     pub fn cfg(self, cfg: Config) -> Self {
-        SystemBuilder {
+        Self {
             cfg: Some(cfg),
             ..self
         }
     }
 
     pub fn exec(self, exec: ThreadPool) -> Self {
-        SystemBuilder {
+        Self {
             exec: Some(exec),
             ..self
         }
     }
 
     pub fn log(self, log: Logger) -> Self {
-        SystemBuilder {
+        Self {
             log: Some(log),
             ..self
         }
@@ -246,39 +246,34 @@ impl ActorSystem {
     /// Create a new `ActorSystem` instance
     ///
     /// Requires a type that implements the `Model` trait.
-    pub fn new() -> Result<ActorSystem, SystemError> {
+    pub fn new() -> Result<Self, SystemError> {
         let cfg = load_config();
         let exec = default_exec(&cfg);
         let log = default_log(&cfg);
 
-        ActorSystem::create("riker", exec, log, cfg)
+        Self::create("riker", exec, log, cfg)
     }
 
     /// Create a new `ActorSystem` instance with provided name
     ///
     /// Requires a type that implements the `Model` trait.
-    pub fn with_name(name: &str) -> Result<ActorSystem, SystemError> {
+    pub fn with_name(name: &str) -> Result<Self, SystemError> {
         let cfg = load_config();
         let exec = default_exec(&cfg);
         let log = default_log(&cfg);
 
-        ActorSystem::create(name, exec, log, cfg)
+        Self::create(name, exec, log, cfg)
     }
 
     /// Create a new `ActorSystem` instance bypassing default config behavior
-    pub fn with_config(name: &str, cfg: Config) -> Result<ActorSystem, SystemError> {
+    pub fn with_config(name: &str, cfg: Config) -> Result<Self, SystemError> {
         let exec = default_exec(&cfg);
         let log = default_log(&cfg);
 
-        ActorSystem::create(name, exec, log, cfg)
+        Self::create(name, exec, log, cfg)
     }
 
-    fn create(
-        name: &str,
-        exec: ThreadPool,
-        log: Logger,
-        cfg: Config,
-    ) -> Result<ActorSystem, SystemError> {
+    fn create(name: &str, exec: ThreadPool, log: Logger, cfg: Config) -> Result<Self, SystemError> {
         validate_name(name).map_err(|_| SystemError::InvalidName(name.into()))?;
         // Process Configuration
         let debug = cfg.get_bool("debug").unwrap();
@@ -302,7 +297,7 @@ impl ActorSystem {
         };
 
         // 2. create uninitialized system
-        let mut sys = ActorSystem {
+        let mut sys = Self {
             proto: Arc::new(proto),
             debug,
             exec,
@@ -372,8 +367,11 @@ impl ActorSystem {
         println!("{}", self.get_tree());
     }
 
+    #[allow(clippy::items_after_statements)]
     pub fn get_tree(&self) -> String {
         let mut tree_str: String = String::new();
+        let root = self.sys_actors.as_ref().unwrap().root.clone();
+
         fn get_node(
             mut tree_str: &mut String,
             sys: &ActorSystem,
@@ -396,7 +394,6 @@ impl ActorSystem {
             (*tree_str).to_string()
         }
 
-        let root = self.sys_actors.as_ref().unwrap().root.clone();
         get_node(&mut tree_str, self, root, "")
     }
 
@@ -454,7 +451,7 @@ impl ActorSystem {
         A: Actor,
     {
         self.provider
-            .create_actor(props, name, &self.sys_root(), self)
+            .create_actor(props, name, self.sys_root(), self)
     }
 
     pub fn sys_actor_of<A>(&self, name: &str) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
@@ -462,7 +459,7 @@ impl ActorSystem {
         A: ActorFactory,
     {
         self.provider
-            .create_actor(Props::new_no_args(A::create), name, &self.sys_root(), self)
+            .create_actor(Props::new_no_args(A::create), name, self.sys_root(), self)
     }
 
     pub fn sys_actor_of_args<A, Args>(
@@ -477,7 +474,7 @@ impl ActorSystem {
         self.provider.create_actor(
             Props::new_args(A::create_args, args),
             name,
-            &self.sys_root(),
+            self.sys_root(),
             self,
         )
     }
@@ -541,7 +538,7 @@ impl ActorRefFactory for ActorSystem {
         A: Actor,
     {
         self.provider
-            .create_actor(props, name, &self.user_root(), self)
+            .create_actor(props, name, self.user_root(), self)
     }
 
     fn actor_of<A>(&self, name: &str) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
@@ -549,7 +546,7 @@ impl ActorRefFactory for ActorSystem {
         A: ActorFactory,
     {
         self.provider
-            .create_actor(Props::new_no_args(A::create), name, &self.user_root(), self)
+            .create_actor(Props::new_no_args(A::create), name, self.user_root(), self)
     }
 
     fn actor_of_args<A, Args>(
@@ -564,7 +561,7 @@ impl ActorRefFactory for ActorSystem {
         self.provider.create_actor(
             Props::new_args(A::create_args, args),
             name,
-            &self.user_root(),
+            self.user_root(),
             self,
         )
     }
@@ -584,7 +581,7 @@ impl ActorRefFactory for &ActorSystem {
         A: Actor,
     {
         self.provider
-            .create_actor(props, name, &self.user_root(), self)
+            .create_actor(props, name, self.user_root(), self)
     }
 
     fn actor_of<A>(&self, name: &str) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
@@ -592,7 +589,7 @@ impl ActorRefFactory for &ActorSystem {
         A: ActorFactory,
     {
         self.provider
-            .create_actor(Props::new_no_args(A::create), name, &self.user_root(), self)
+            .create_actor(Props::new_no_args(A::create), name, self.user_root(), self)
     }
 
     fn actor_of_args<A, Args>(
@@ -607,7 +604,7 @@ impl ActorRefFactory for &ActorSystem {
         self.provider.create_actor(
             Props::new_args(A::create_args, args),
             name,
-            &self.user_root(),
+            self.user_root(),
             self,
         )
     }
@@ -624,7 +621,7 @@ impl TmpActorRefFactory for ActorSystem {
     {
         let name = format!("{}", rand::random::<u64>());
         self.provider
-            .create_actor(props, &name, &self.temp_root(), self)
+            .create_actor(props, &name, self.temp_root(), self)
     }
 
     fn tmp_actor_of<A>(&self) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
@@ -632,12 +629,8 @@ impl TmpActorRefFactory for ActorSystem {
         A: ActorFactory,
     {
         let name = format!("{}", rand::random::<u64>());
-        self.provider.create_actor(
-            Props::new_no_args(A::create),
-            &name,
-            &self.temp_root(),
-            self,
-        )
+        self.provider
+            .create_actor(Props::new_no_args(A::create), &name, self.temp_root(), self)
     }
 
     fn tmp_actor_of_args<A, Args>(
@@ -652,7 +645,7 @@ impl TmpActorRefFactory for ActorSystem {
         self.provider.create_actor(
             Props::new_args(A::create_args, args),
             &name,
-            &self.temp_root(),
+            self.temp_root(),
             self,
         )
     }
@@ -811,7 +804,7 @@ fn sys_actor_of_props<A>(
 where
     A: Actor,
 {
-    prov.create_actor(props, name, &sys.sys_root(), sys)
+    prov.create_actor(props, name, sys.sys_root(), sys)
         .map_err(|_| SystemError::ModuleFailed(name.into()))
 }
 
@@ -823,7 +816,7 @@ fn sys_actor_of<A>(
 where
     A: ActorFactory,
 {
-    prov.create_actor(Props::new_no_args(A::create), name, &sys.sys_root(), sys)
+    prov.create_actor(Props::new_no_args(A::create), name, sys.sys_root(), sys)
         .map_err(|_| SystemError::ModuleFailed(name.into()))
 }
 
@@ -868,7 +861,7 @@ pub struct SystemSettings {
 
 impl<'a> From<&'a Config> for SystemSettings {
     fn from(config: &Config) -> Self {
-        SystemSettings {
+        Self {
             msg_process_limit: config.get_int("mailbox.msg_process_limit").unwrap() as u32,
         }
     }
@@ -880,7 +873,7 @@ struct ThreadPoolConfig {
 
 impl<'a> From<&'a Config> for ThreadPoolConfig {
     fn from(config: &Config) -> Self {
-        ThreadPoolConfig {
+        Self {
             pool_size: config.get_int("dispatcher.pool_size").unwrap() as usize,
         }
     }
@@ -919,13 +912,13 @@ struct WhenTerminatedActor {
 
 impl ActorFactoryArgs<Arc<Mutex<Option<oneshot::Sender<()>>>>> for WhenTerminatedActor {
     fn create_args(tx: Arc<Mutex<Option<oneshot::Sender<()>>>>) -> Self {
-        WhenTerminatedActor::new(tx)
+        Self::new(tx)
     }
 }
 
 impl WhenTerminatedActor {
     fn new(tx: Arc<Mutex<Option<oneshot::Sender<()>>>>) -> Self {
-        WhenTerminatedActor { tx }
+        Self { tx }
     }
 }
 

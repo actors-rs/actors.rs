@@ -120,7 +120,7 @@ pub trait ActorFactoryArgs<Args: ActorArgs>: Actor {
 
 impl<A: Default + Actor> ActorFactory for A {
     fn create() -> Self {
-        A::default()
+        Self::default()
     }
 }
 
@@ -197,7 +197,7 @@ where
     where
         F: Fn() -> A + Send + 'static,
     {
-        ActorProps {
+        Self {
             creator: Box::new(creator),
         }
     }
@@ -244,7 +244,7 @@ where
     where
         F: Fn(Args) -> A + Send + 'static,
     {
-        ActorPropsWithArgs {
+        Self {
             creator: Box::new(creator),
             args,
         }

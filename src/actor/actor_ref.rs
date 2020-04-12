@@ -129,7 +129,7 @@ where
 }
 
 impl<T> PartialEq for BoxedTell<T> {
-    fn eq(&self, other: &BoxedTell<T>) -> bool {
+    fn eq(&self, other: &Self) -> bool {
         self.path() == other.path()
     }
 }
@@ -173,8 +173,8 @@ pub struct BasicActorRef {
 
 impl BasicActorRef {
     #[doc(hidden)]
-    pub fn new(cell: ActorCell) -> BasicActorRef {
-        BasicActorRef { cell }
+    pub const fn new(cell: ActorCell) -> Self {
+        Self { cell }
     }
 
     pub fn typed<Msg: Message>(&self, cell: ExtendedCell<Msg>) -> ActorRef<Msg> {
@@ -188,11 +188,7 @@ impl BasicActorRef {
     /// Send a message to this actor
     ///
     /// Returns a result. If the message type is not supported Error is returned.
-    pub fn try_tell<Msg>(
-        &self,
-        msg: Msg,
-        sender: impl Into<Option<BasicActorRef>>,
-    ) -> Result<(), ()>
+    pub fn try_tell<Msg>(&self, msg: Msg, sender: impl Into<Option<Self>>) -> Result<(), ()>
     where
         Msg: Message + Send,
     {
@@ -202,7 +198,7 @@ impl BasicActorRef {
     pub fn try_tell_any(
         &self,
         msg: &mut AnyMessage,
-        sender: impl Into<Option<BasicActorRef>>,
+        sender: impl Into<Option<Self>>,
     ) -> Result<(), ()> {
         self.cell.send_any_msg(msg, sender.into())
     }
@@ -323,7 +319,7 @@ impl fmt::Display for BasicActorRef {
 }
 
 impl PartialEq for BasicActorRef {
-    fn eq(&self, other: &BasicActorRef) -> bool {
+    fn eq(&self, other: &Self) -> bool {
         self.cell.uri().path == other.cell.uri().path
     }
 }
@@ -332,8 +328,8 @@ impl<Msg> From<ActorRef<Msg>> for BasicActorRef
 where
     Msg: Message,
 {
-    fn from(actor: ActorRef<Msg>) -> BasicActorRef {
-        BasicActorRef::new(ActorCell::from(actor.cell))
+    fn from(actor: ActorRef<Msg>) -> Self {
+        Self::new(ActorCell::from(actor.cell))
     }
 }
 
@@ -341,7 +337,7 @@ impl<Msg> From<ActorRef<Msg>> for Option<BasicActorRef>
 where
     Msg: Message,
 {
-    fn from(actor: ActorRef<Msg>) -> Option<BasicActorRef> {
+    fn from(actor: ActorRef<Msg>) -> Self {
         Some(BasicActorRef::new(ActorCell::from(actor.cell)))
     }
 }
@@ -373,8 +369,8 @@ pub struct ActorRef<Msg: Message> {
 
 impl<Msg: Message> ActorRef<Msg> {
     #[doc(hidden)]
-    pub fn new(cell: ExtendedCell<Msg>) -> ActorRef<Msg> {
-        ActorRef { cell }
+    pub fn new(cell: ExtendedCell<Msg>) -> Self {
+        Self { cell }
     }
 
     pub fn send_msg(&self, msg: Msg, sender: impl Into<Option<BasicActorRef>>) {
@@ -502,7 +498,7 @@ impl<Msg: Message> fmt::Display for ActorRef<Msg> {
 }
 
 impl<Msg: Message> PartialEq for ActorRef<Msg> {
-    fn eq(&self, other: &ActorRef<Msg>) -> bool {
+    fn eq(&self, other: &Self) -> bool {
         self.uri().path == other.uri().path
     }
 }

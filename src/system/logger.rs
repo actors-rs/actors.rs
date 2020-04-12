@@ -17,7 +17,7 @@ pub struct LoggerConfig {
 
 impl<'a> From<&'a Config> for LoggerConfig {
     fn from(config: &Config) -> Self {
-        LoggerConfig {
+        Self {
             time_fmt: config.get_str("log.time_format").unwrap(),
             date_fmt: config.get_str("log.date_format").unwrap(),
             log_fmt: config.get_str("log.log_format").unwrap(),
@@ -54,8 +54,8 @@ struct DefaultConsoleLogger {
 }
 
 impl DefaultConsoleLogger {
-    fn new(cfg: LoggerConfig) -> Self {
-        DefaultConsoleLogger { cfg }
+    const fn new(cfg: LoggerConfig) -> Self {
+        Self { cfg }
     }
 }
 
@@ -94,14 +94,11 @@ pub struct DeadLetterLogger {
 
 impl DeadLetterLogger {
     fn new((dl_chan, logger): (ActorRef<ChannelMsg<DeadLetter>>, Logger)) -> Self {
-        DeadLetterLogger { dl_chan, logger }
+        Self { dl_chan, logger }
     }
 
-    pub fn props(
-        dl_chan: &ActorRef<ChannelMsg<DeadLetter>>,
-        logger: Logger,
-    ) -> BoxActorProd<DeadLetterLogger> {
-        Props::new_args(DeadLetterLogger::new, (dl_chan.clone(), logger))
+    pub fn props(dl_chan: &ActorRef<ChannelMsg<DeadLetter>>, logger: Logger) -> BoxActorProd<Self> {
+        Props::new_args(Self::new, (dl_chan.clone(), logger))
     }
 }
 

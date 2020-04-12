@@ -1,5 +1,8 @@
 #![crate_name = "actors"]
-
+#![deny(clippy::all)]
+// #![deny(clippy::pedantic)]
+#![deny(clippy::nursery)]
+#![allow(clippy::fallible_impl_from)]
 mod validate;
 
 pub mod actor;
@@ -62,7 +65,7 @@ impl AnyMessage {
     where
         T: Any + Message,
     {
-        AnyMessage {
+        Self {
             one_time,
             msg: Some(Box::new(msg)),
         }
@@ -85,7 +88,7 @@ impl AnyMessage {
             }
         } else {
             match self.msg.as_ref() {
-                Some(ref m) if m.is::<T>() => Ok(m.downcast_ref::<T>().cloned().unwrap()),
+                Some(m) if m.is::<T>() => Ok(m.downcast_ref::<T>().cloned().unwrap()),
                 Some(_) => Err(()),
                 None => Err(()),
             }

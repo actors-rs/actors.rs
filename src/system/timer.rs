@@ -101,7 +101,7 @@ impl BasicTimer {
     pub fn start(cfg: &Config) -> TimerRef {
         let cfg = BasicTimerConfig::from(cfg);
 
-        let mut process = BasicTimer {
+        let mut process = Self {
             once_jobs: Vec::new(),
             repeat_jobs: Vec::new(),
         };
@@ -186,7 +186,7 @@ struct BasicTimerConfig {
 
 impl<'a> From<&'a Config> for BasicTimerConfig {
     fn from(config: &Config) -> Self {
-        BasicTimerConfig {
+        Self {
             frequency_millis: config.get_int("scheduler.frequency_millis").unwrap() as u64,
         }
     }
