@@ -89,8 +89,10 @@ fn main() {
 
 In this example, we've used `#actor[Add, Sub, Print]` to set up the actor to receive `Add`, `Sub` and `Print` types. For each of these, the `Receive<T>` trait is implemented on the actor, defining how each message should be handled.
 
+<!-- prettier-ignore-start -->
 !!! note
-When using the `#[actor()]` attribute, the actor's `Msg` associated type should be set to '[DataType]Msg'. E.g. if an actor is a struct named `MyActor`, then the `Actor::Msg` associated type will be `MyActorMsg`.
+    When using the `#[actor()]` attribute, the actor's `Msg` associated type should be set to '[DataType]Msg'. E.g. if an actor is a struct named `MyActor`, then the `Actor::Msg` associated type will be `MyActorMsg`.
+<!-- prettier-ignore-end -->
 
 By utilizing `Receive<T>` and `#[actor]`, complex message handling can be defined clearly and concisely.
 

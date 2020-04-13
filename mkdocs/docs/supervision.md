@@ -21,8 +21,10 @@ fn supervisor_strategy(&self) -> Strategy { Strategy::Stop }
 
 In this case, if a child fails it will choose to stop it.
 
+<!-- prettier-ignore-start -->
 !!! note
-If `supervisor_strategy` is not set, the default implementation is `Strategy::Restart`.
+    If `supervisor_strategy` is not set, the default implementation is `Strategy::Restart`.
+<!-- prettier-ignore-end -->
 
 ## Mailboxes
 

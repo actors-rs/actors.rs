@@ -57,8 +57,10 @@ ctx.schedule(delay,
 
 Here a message is scheduled to be repeated every 500 milliseconds. There is also a 100 millisecond initial delay, i.e. the duration before repeating of the message begins.
 
+<!-- prettier-ignore-start -->
 !!! note
-Riker's default timer module is not persistent meaning that any scheduling is lost when an application is stopped. It's optimized for short dated durations from a few milliseconds to 48 hours, or your average time between deployments.
+    Riker's default timer module is not persistent meaning that any scheduling is lost when an application is stopped. It's optimized for short dated durations from a few milliseconds to 48 hours, or your average time between deployments.
+<!-- prettier-ignore-end -->
 
 ## Cancelling
 

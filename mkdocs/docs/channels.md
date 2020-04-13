@@ -36,8 +36,10 @@ Here we have two actors that each need to receive status changes in available ba
 
 The `Subscribe` message is used to subscribe an actor to a channel, which you'll notice requires a topic. A channel consists of one or more topics, typically that have a common theme. When a message is published it is published to a specific topic on the channel.
 
+<!-- prettier-ignore-start -->
 !!! note
-When subscribing to a topic, if it does't already exist it will be created and any future messages published to it will be sent to the subscriber.
+    When subscribing to a topic, if it does't already exist it will be created and any future messages published to it will be sent to the subscriber.
+<!-- prettier-ignore-end -->
 
 ## Publishing
 
@@ -67,8 +69,10 @@ sys.sys_events()
     .tell(Subscribe { actor: sub1, topic: "actor.created".into() }, None);
 ```
 
+<!-- prettier-ignore-start -->
 !!! note
-System events are considered system messages and therefore a subscriber's `Actor::sys_recv` method will be invoked instead of `Actor::recv`.
+    System events are considered system messages and therefore a subscriber's `Actor::sys_recv` method will be invoked instead of `Actor::recv`.
+<!-- prettier-ignore-end -->
 
 ### Dead letters
 

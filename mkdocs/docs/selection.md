@@ -33,8 +33,10 @@ sel.try_tell(Protocol::Off, None);
 
 In this example an actor responsible for lighting in a home has a child actor for each individual light. If we want to turn off all lights a control message (`Protocol::Off`) could be sent to `/user/home-control/lighting/*`. Each child actor will receive the same message.
 
+<!-- prettier-ignore-start -->
 !!! note
-Paths are relative to the location where the selection is being made. E.g. from the actor `lighting`'s context, all children could be selected using `ctx.selection("*")`.
+    Paths are relative to the location where the selection is being made. E.g. from the actor `lighting`'s context, all children could be selected using `ctx.selection("*")`.
+<!-- prettier-ignore-end -->
 
 We've seen that `ActorSelection` provides flexibility for certain use cases such as when an `ActorRef` isn't known at compile time, but more specifically for messaging multiple actors. This comes at the cost of traversing part of the actor hierarchy and cloning messages.
 

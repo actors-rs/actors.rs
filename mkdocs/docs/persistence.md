@@ -150,8 +150,10 @@ pub trait EventStore : Clone + Send + Sync + 'static {
 
 An implementation of `EventStore` simply needs to provide an instance of `Self` in the `new` function that will be invoked when the actor system starts. `insert` and `load` methods perform any serialization and deserialization necessary. The methods are invoked when `persist_event` is used and when an actor starts respectively.
 
+<!-- prettier-ignore-start -->
 !!! note
-Since an event store only contains events and not whole state data can be serialized and stored in a single column of a database table for example. CBOR, JSON, MessagePack or any other serialization format could be used.
+    Since an event store only contains events and not whole state data can be serialized and stored in a single column of a database table for example. CBOR, JSON, MessagePack or any other serialization format could be used.
+<!-- prettier-ignore-end -->
 
 ```text
 The default model uses a simple in-memory event store which can be useful in tests and simple applications. All events are lost when the actor system is stopped.
@@ -224,8 +226,10 @@ impl EntityActorProps for BankAccountProps {
 }
 ```
 
+<!-- prettier-ignore-start -->
 !!! note
-If other systems outside of the actor system need to view the current state, which is generally the case, materialized views can be generated and stored in a separate data storage each time an event is persisted. This provides a clear separation between the command-side and query-side of state management.
+    If other systems outside of the actor system need to view the current state, which is generally the case, materialized views can be generated and stored in a separate data storage each time an event is persisted. This provides a clear separation between the command-side and query-side of state management.
+<!-- prettier-ignore-end -->
 
 By default, if an entity actor instance has no activity for more the 120 seconds the manager will put the actor in to a sleep state. During this state the actor and its state is no longer in memory. When a command is sent to an actor in sleep state it is woken up by the manager, its state restored, and the command handled.
 

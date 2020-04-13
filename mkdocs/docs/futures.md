@@ -14,8 +14,10 @@ assert_eq!(block_on(handle), "someval".to_string());
 
 `sys.run` schedules the future for execution it will drive it to completion utilizing the dispatcher's thread pool. `run` returns a `futures::future::RemoteHandle` future that can be used to extract the result.
 
+<!-- prettier-ignore-start -->
 !!! note
-Riker executes futures using the `Futures` crate's `futures::executor::ThreadPool`.
+    Riker executes futures using the `Futures` crate's `futures::executor::ThreadPool`.
+<!-- prettier-ignore-end -->
 
 In the next section we'll see how to to test Riker applications.
 

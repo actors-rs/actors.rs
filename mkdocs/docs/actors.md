@@ -8,8 +8,12 @@ If you've never used actors in application development before, this documentatio
 
 We welcome and encourage contributions to this guide. Please feel free to create Github issues with feedback or create PRs with changes. This documentation's source lives at: [https://github.com/riker-rs/website](https://github.com/riker-rs/website).
 
+<!-- prettier-ignore-start -->
 !!! note
-Riker is pre-1.0, and as such the framework is evolving. You can expect some API-level changes, but we do strive to keep breaking changes to an absolute minimum. Between versions 0.1 to 0.2.3 there was only one minor API change, for example.
+    Riker is pre-1.0, and as such the framework is evolving. You can expect some API-level changes,
+    but we do strive to keep breaking changes to an absolute minimum. Between versions 0.1 to 0.2.3
+    there was only one minor API change, for example.
+<!-- prettier-ignore-end -->
 
 ## Actors
 
