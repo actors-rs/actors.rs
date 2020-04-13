@@ -9,6 +9,7 @@ repository = "https://github.com/actors-rs/actors.rs"
 license = "MIT"
 readme = "README.md"
 keywords = ["actor", "actors", "actor-model", "async", "cqrs", "event_sourcing"]
+build = "build.rs"
 
 [badges]
 travis-ci = { repository = "actors-rs/actors.rs" }
@@ -28,6 +29,10 @@ slog-scope = "4.1"
 
 [dev-dependencies]
 riker-testkit = "0.1.0"
+skeptic = "0.13"
+
+[build-dependencies]
+skeptic = "0.13"
 
 [workspace]
 members = [
@@ -36,3 +41,6 @@ members = [
 
 [patch.crates-io]
 actors-macros = { path = "actors-macros" }
+
+[[example]]
+name = "basic"

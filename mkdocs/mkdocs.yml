@@ -1,5 +1,5 @@
-site_name: Riker
-google_analytics: ['UA-53076020-3', 'riker.rs']
+site_name: Actors.rs
+google_analytics: ['UA-53076020-3', 'actors.rs']
 repo_name: 'riker-rs/website'
 repo_url: 'https://github.com/riker-rs/website'
 

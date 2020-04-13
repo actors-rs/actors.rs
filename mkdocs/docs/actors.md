@@ -37,19 +37,18 @@ To define an actor, the system needs to understand how an actor should handle th
 Here's the Rust code:
 
 ```rust
+use actors::actors::*;
+
 struct MyActor;
 
 impl Actor for MyActor {
     type Msg = String;
 
-    fn recv(&mut self,
-            ctx: &Context<String>,
-            msg: String,
-            sender: Sender) {
-
+    fn recv(&mut self, _ctx: &Context<String>, msg: String, _sender: Sender) {
         println!("received {}", msg);
     }
 }
+fn main() {}
 ```
 
 In this example, a simple struct `MyActor` implements the `Actor` trait. When a message is sent to `MyActor`, it is scheduled by the system for immediate execution. The `recv` function is invoked and the message is printed to stdout.
@@ -61,7 +60,11 @@ Every application has an `ActorSystem`. The actor system provides actor manageme
 To start the actor system:
 
 ```rust
-let sys = ActorSystem::new().unwrap();
+use actors::actors::*;
+
+fn main() {
+    let sys = ActorSystem::new().unwrap();
+}
 ```
 
 Here we see that the actor is started using `ActorSystem::new`.
@@ -70,22 +73,47 @@ Once we've started the actor system we're ready to create some actors.
 We can also configure the system with a custom name using the `SystemBuilder`:
 
 ```rust
-let sys = SystemBuilder::new()
-                        .name("my-app")
-                        .create()
-                        .unwrap();
+use actors::actors::*;
+
+fn main() {
+    let sys = SystemBuilder::new()
+        .name("my-app")
+        .create()
+        .unwrap();
+}
 ```
 
 Once the actor system is started, we can begin to create actors:
 
 ```rust
-let props = Props::new(MyActor::new);
-let my_actor = sys.actor_of(props, "my-actor");
+use actors::actors::*;
+
+#[derive(Default)]
+struct MyActor;
+
+impl Actor for MyActor {
+    type Msg = String;
+
+    fn recv(&mut self, _ctx: &Context<String>, msg: String, _sender: Sender) {
+        println!("received {}", msg);
+    }
+}
+
+
+fn main() {
+    let sys = ActorSystem::new().unwrap();
+    let my_actor = sys.actor_of::<MyActor>("my-actor").unwrap();
+}
 ```
 
-Every actor requires a `Props` that holds the actor's factory function, in this example `MyActor::new`, and any parameters required by that function. `Props` is then used with `actor_of` to create an instance of the actor. A name is also required so that we can look it up later if we need.
+`actor_of` used to create an instance of the actor. A `my-actor` name is also required so that
+we can look it up later if we need.
 
-Although this is just two lines of code, a lot is happening behind the scenes. Actor lifecycles and state are managed by the system. When an actor starts, it keeps the properties in case it needs it again to restart the actor if it fails. When an actor is created, it gets its own mailbox for receiving messages and other interested actors are notified about the new actor joining the system.
+Although this is just two lines of code, a lot is happening behind the scenes.
+Actor lifecycles and state are managed by the system.
+When an actor starts, it keeps the properties in case it needs it again to restart the actor if it fails.
+When an actor is created, it gets its own mailbox for receiving messages and other interested actors are notified about
+the new actor joining the system.
 
 ## Actor References
 
@@ -93,8 +121,11 @@ When an actor is started using `actor_of`, the system returns a reference to the
 
 An `ActorRef` always refers to a specific instance of an actor. When two instances of the same `Actor` are started, they're still considered separate actors, each with different `ActorRef`s.
 
-!!! note
-`ActorRef`s are inexpensive and can be cloned (they implement `Clone`) without too much concern about resources. References can also be used in `Props` as a field in another actor's factory method, a pattern known as endowment. `ActorRef`s can be sent as a message to another actor, a pattern known as introduction.
+> `ActorRef`s are inexpensive and can be cloned (they implement `Clone`) without too much concern about resources.
+> References can also be used in `Props` as a field in another actor's factory method, a pattern known as endowment.
+> `ActorRef`s can be sent as a message to another actor, a pattern known as introduction.
+
+TODO: put example here
 
 ## Sending Messages
 
@@ -102,53 +133,22 @@ Actors communicate only through sending and receiving messages. They are isolate
 
 If we want to send a message to an actor, we use the `tell` method on the actor's `ActorRef`:
 
-```rust
-let my_actor = sys.actor_of(props, "my-actor");
-my_actor.tell("Hello my actor!".to_string(), None);
-```
-
-Here, we've sent a message of type `String` to our `MyActor` actor. The second parameter lets us specify a sender as an `Option<BasicActorRef>` (type alias `Sender`). Since we're sending the message from `main` and not from an actor, we're setting the sender as `None`.
-
-## Example
-
-Let's go back to our `MyActor` and combine what we've seen so far into a complete example:
-
-`Cargo.toml` dependencies:
-
-```toml
-[dependencies]
-actors = "0.1"
-```
-
-`main.rs`:
+[basic.rs](../examples/basic.rs)
 
 ```rust
-use std::time::Duration;
+extern crate actors;
 use actors::actors::*;
+use std::time::Duration;
 
+#[derive(Default)]
 struct MyActor;
 
 // implement the Actor trait
 impl Actor for MyActor {
     type Msg = String;
 
-    fn recv(&mut self,
-            _ctx: &Context<String>,
-            msg: String,
-            _sender: Sender) {
-
-        debug!("Received: {}", msg);
-    }
-}
-
-// provide factory and props functions
-impl MyActor {
-    fn actor() -> Self {
-        MyActor
-    }
-
-    fn props() -> BoxActorProd<MyActor> {
-        Props::new(MyActor::actor)
+    fn recv(&mut self, _ctx: &Context<Self::Msg>, msg: Self::Msg, _sender: Sender) {
+        println!("Received: {}", msg);
     }
 }
 
@@ -156,32 +156,29 @@ impl MyActor {
 fn main() {
     let sys = ActorSystem::new().unwrap();
 
-    let props = MyActor::props();
-    let my_actor = sys.actor_of(props, "my-actor").unwrap();
+    let my_actor = sys.actor_of::<MyActor>("my-actor").unwrap();
 
     my_actor.tell("Hello my actor!".to_string(), None);
 
-    // force main to wait before exiting program
     std::thread::sleep(Duration::from_millis(500));
 }
 ```
 
-Here, we've started the actor system and an instance of `MyActor`. Then, we sent a message to the actor. You'll notice we provided a factory function `actor()` and props function `props()` as part of `MyActor`'s implementation.
-
-To explore this example project, click [here](https://github.com/riker-rs/examples/tree/master/basic).
-
-!!! note
-If an actor's factory method requires parameters, you can use `Props::new_args`. See the Rustdocs for an example.
+Here, we've sent a message of type `String` to our `MyActor` actor.
+The second parameter lets us specify a sender as an `Option<BasicActorRef>` (type alias `Sender`).
+Since we're sending the message from `main` and not from an actor, we're setting the sender as `None`.
 
 ## Message Guarantees
 
 Riker provides certain guarantees when handling messages:
 
-- Message delivery is 'at-most-once'. A message will either fail to be delivered, or be delivered one time. There is no repeat delivery of the same message.
+- Message delivery is 'at-most-once'. A message will either fail to be delivered, or be delivered one time.
+  There is no repeat delivery of the same message.
 - An actor handles one message at any time.
 - Messages are stored in an actor's mailbox in the order that they are received.
 
-On this page, you learned the basics of creating a Riker application using actors. Let's move on to the next section to see more comprehensive example using multiple message types:
+On this page, you learned the basics of creating a Riker application using actors.
+Let's move on to the next section to see more comprehensive example using multiple message types:
 
 [Sending multiple message types](messaging.md)
 

@@ -54,7 +54,7 @@ repos:
         args: [-r, '~MD013,~MD004,~MD033']
       - id: require-ascii
         name: Check file encoding https://github.com/jumanjihouse/pre-commit-hooks#require-ascii .
-        exclude: ^(frontpage/README.md|mkdocs/docs/hierarchy.md)$
+        exclude: ^(frontpage/README.md|mkdocs/docs/hierarchy.md|mkdocs/docs/supervision.md)$
   #      - id: shellcheck
   - repo: https://github.com/Lucas-C/pre-commit-hooks-nodejs
     rev: v1.1.0
