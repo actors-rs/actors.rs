@@ -133,7 +133,7 @@ Actors communicate only through sending and receiving messages. They are isolate
 
 If we want to send a message to an actor, we use the `tell` method on the actor's `ActorRef`:
 
-[basic.rs](../examples/basic.rs)
+[basic.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/basic.rs)
 
 ```rust
 extern crate actors;

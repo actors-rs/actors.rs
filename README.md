@@ -169,3 +169,6 @@ actors-rs-mkdocs: [I 200413 10:38:05 server:283] Serving on http://localhost:800
 ...
 a
 ```
+
+- [http://localhost:8000/](http://localhost:8000/) to test frontpage
+- [http://localhost:8001/](http://localhost:8001/) to test mkdocs part

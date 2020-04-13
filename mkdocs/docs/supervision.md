@@ -51,7 +51,7 @@ The sequence followed is:
 1. Restart the failed actor
 1. Resume the actor's mailbox and message handling
 
-[supervision_restart.rs](../examples/supervision_restart.rs)
+[supervision_restart.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/supervision_restart.rs)
 
 ```rust
 use actors::actors::*;
@@ -162,7 +162,7 @@ The sequence followed is:
 1. The supervisor escalates and its mailbox is suspended
 1. The new supervisor decides which supervision strategy to follow
 
-[supervision_escalate.rs](../examples/supervision_escalate.rs)
+[supervision_escalate.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/supervision_escalate.rs)
 
 ```rust
 use actors::actors::*;
@@ -304,7 +304,7 @@ fn supervisor_strategy(&self) -> Strategy { Strategy::Stop }
 
 The stop strategy stops the failed actor, removing it and its mailbox from the system.
 
-[supervision_stop.rs](../examples/supervision_stop.rs)
+[supervision_stop.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/supervision_stop.rs)
 
 ```rust
 use actors::actors::*;

@@ -9,7 +9,7 @@ Riker provides a `Receive<T>` trait and the `#[actor]` attribute.
 
 Let's see how these are used:
 
-[messaging.rs](../examples/messaging.rs)
+[messaging.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/messaging.rs)
 
 ```rust
 use actors::actors::*;

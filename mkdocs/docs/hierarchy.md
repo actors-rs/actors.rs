@@ -41,7 +41,7 @@ Since it was started by using `actor_of` on `ActorSystem` it is considered a top
 Let's look at how the hierarchy changes when another actor is started, this time from within `/user/my-actor`'s `recv`
 method using `Context.actor_of`.
 
-[hierarchy.rs](../examples/hierarchy.rs)
+[hierarchy.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/hierarchy.rs)
 
 ```rust
 extern crate actors;
