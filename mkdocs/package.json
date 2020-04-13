@@ -1,0 +1,32 @@
+{
+  "name": "actors-rs-mkdocs",
+  "description": "actors-rs mkdocs book",
+  "version": "1.0.0",
+  "author": "Kyle Mathews <mathews.kyle@gmail.com>, Olexiy Buyanskyy <olexiyb@gmail.com>",
+  "dependencies": {},
+  "keywords": [
+    "mkdocs",
+    "actors-rs"
+  ],
+  "license": "MIT",
+  "scripts": {
+    "start": "nopenv mkdocs serve -a localhost:8001",
+    "build": "nopenv mkdocs build",
+    "depcheck": "depcheck --ignore-dirs python_modules",
+    "install": "npip install"
+  },
+  "devDependencies": {
+    "nopy": "^0.2.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  },
+  "python": {
+    "execPath": "python3",
+    "dependencies": {
+      "mkdocs": ">=1.1",
+      "mkdocs-material": ">=5.0"
+    }
+  }
+}

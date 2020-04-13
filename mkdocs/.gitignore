@@ -1,0 +1,5 @@
+site/
+
+# Project dependencies
+node_modules
+python_modules

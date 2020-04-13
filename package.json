@@ -1,0 +1,30 @@
+{
+  "name": "actors-rs-website",
+  "private": true,
+  "workspaces": [
+    "frontpage/",
+    "mkdocs/"
+  ],
+  "scripts": {
+    "start": "lerna run --parallel start --stream",
+    "build": "rm -rf frontpage/public/book && lerna run build --stream && mv mkdocs/site frontpage/public/book",
+    "depcheck": "lerna run depcheck --stream",
+    "deploy": "yarn build && gh-pages -d frontpage/public -b master -r 'https://github.com/actors-rs/actors-rs.github.io.git'",
+    "install": "npip install"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.2.0",
+    "lerna": "^3.20.2",
+    "nopy": "^0.2.7"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gatsbyjs/gatsby-starter-default"
+  },
+  "python": {
+    "execPath": "python3",
+    "dependencies": {
+      "pre-commit": ">=2.0"
+    }
+  }
+}

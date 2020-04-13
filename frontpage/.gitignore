@@ -1,16 +1,6 @@
-**/target
-**/*.rs.bk
-.vscode
-.idea
-Cargo.lock
-
-site/
-.DS_Store
-
 # Project dependencies
 .cache
 node_modules
-python_modules
 yarn-error.log
 
 # Build directory

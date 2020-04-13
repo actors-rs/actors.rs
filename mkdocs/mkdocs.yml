@@ -1,0 +1,34 @@
+site_name: Riker
+google_analytics: ['UA-53076020-3', 'riker.rs']
+repo_name: 'riker-rs/website'
+repo_url: 'https://github.com/riker-rs/website'
+
+pages:
+  - Home: '../'
+  - Actors: actors.md
+  - Message Types: messaging.md
+  - Actor Hierarchy: hierarchy.md
+  - Fault Tolerance: supervision.md
+  - Actor Selection: selection.md
+  - Channels: channels.md
+  - Message Scheduling: scheduling.md
+  - Configuration: config.md
+  - Logging: logging.md
+  - Running Futures: futures.md
+  - Testing: testing.md
+  - Patterns: patterns.md
+  - FAQ: faq.md
+  - Riker 0.3: riker03.md
+
+theme:
+  name: 'material'
+  palette:
+    primary: 'white'
+    accent: 'white'
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.details
+
+use_directory_urls: false

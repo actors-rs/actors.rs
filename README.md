@@ -19,6 +19,7 @@
 + [Rust Version](#rust-version)
 + [Contributing](#contributing)
   + [pre-commit](#pre-commit)
+  + [Documentation](#documentation)
 
 <!-- tocstop -->
 
@@ -135,3 +136,36 @@ There are multiple ways to contribute:
 
 The project is using [pre-commit](https://pre-commit.com/) git hooks to verify committed code
 Make sure you install pre-commit
+
+### Documentation
+
+[actors-rs](https://https://actors-rs.github.io/) consists of 2 parts
+
+- [MkDocs](https://www.mkdocs.org) book.
+- [Gatsby](https://www.gatsbyjs.org/) frontpage
+
+In order to test both parts you need first run `yarn` to install required packages and
+
+```bash
+$ yarn start
+yarn run v1.19.0
+$ lerna run --parallel start --stream
+lerna notice cli v3.20.2
+lerna info versioning independent
+lerna info Executing command in 2 packages: "yarn run start"
+actors-rs-mkdocs: $ nopenv mkdocs serve -a localhost:8001
+actors-rs-frontpage: $ echo 'visit http://localhost:8000/ to test frontpage' && gatsby develop --no-color
+actors-rs-frontpage: visit http://localhost:8000/ to test frontpage
+actors-rs-mkdocs: INFO    -  Building documentation...
+actors-rs-mkdocs: WARNING -  Config value: 'pages'. Warning: The 'pages' configuration option has been deprecated and will be removed in a future release of MkDocs. Use 'nav' instead.
+actors-rs-mkdocs: INFO    -  Cleaning site directory
+actors-rs-mkdocs: INFO    -  The following pages exist in the docs directory, but are not included in the "nav" configuration:
+actors-rs-mkdocs:   - cluster.md
+actors-rs-mkdocs:   - io.md
+actors-rs-mkdocs:   - persistence.md
+actors-rs-mkdocs: WARNING -  A relative path to '../' is included in the 'nav' configuration, which is not found in the documentation files
+actors-rs-mkdocs: INFO    -  Documentation built in 0.44 seconds
+actors-rs-mkdocs: [I 200413 10:38:05 server:283] Serving on http://localhost:8001
+...
+a
+```

@@ -1,3 +1,4 @@
+files: '^(actors-macros/.*|config/.*|frontpage/.*|mkdocs/.*|src/.*|tests/.*|[^/]*)$'
 repos:
   - repo: local
     hooks:
@@ -45,14 +46,15 @@ repos:
       #        name: Detect if an email address needs to be added to mailmap https://github.com/jumanjihouse/pre-commit-hooks#check-mailmap .
       - id: forbid-binary
         name: Forbid binaries https://github.com/jumanjihouse/pre-commit-hooks#forbid-binary .
-        exclude: ^(.*\.ico)$
+        exclude: ^(.*\.ico|.*\.png)$
       #      - id: git-check # Configure in .gitattributes
       #        name: Check for conflict markers and core.whitespace errors https://github.com/jumanjihouse/pre-commit-hooks#git-check .
       - id: markdownlint # Configure in .mdlrc
         name: Check markdown files https://github.com/jumanjihouse/pre-commit-hooks#markdownlint .
-        args: [-r, '~MD013,~MD004']
+        args: [-r, '~MD013,~MD004,~MD033']
       - id: require-ascii
         name: Check file encoding https://github.com/jumanjihouse/pre-commit-hooks#require-ascii .
+        exclude: ^(frontpage/README.md|mkdocs/docs/hierarchy.md)$
   #      - id: shellcheck
   - repo: https://github.com/Lucas-C/pre-commit-hooks-nodejs
     rev: v1.1.0
