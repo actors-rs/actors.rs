@@ -6,7 +6,6 @@ cache: cargo
 jobs:
   include:
     - rust: stable
-    - rust: nightly
 script:
   - cargo update
   - cargo check --all --no-default-features
