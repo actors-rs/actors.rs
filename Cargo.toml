@@ -41,7 +41,7 @@ members = [
 ]
 
 [patch.crates-io]
-actors-macros = { path = "actors-macros" }
+actors-macros = { path = "actors-macros", version = "0.1.1" }
 
 [[example]]
 name = "basic"
