@@ -12,7 +12,7 @@ impl Actor for Child {
     type Msg = String;
 
     fn recv(&mut self, ctx: &Context<Self::Msg>, msg: Self::Msg, _sender: Sender) {
-        println!("{}: {:?} -> got msg: {}", ctx.myself.name(), self, msg);
+        println!("{}: {:?} -> got msg: {}", ctx.name(), self, msg);
     }
 }
 
@@ -31,34 +31,34 @@ impl Actor for SelectTest {
     }
 
     fn recv(&mut self, ctx: &Context<Self::Msg>, msg: Self::Msg, _sender: Sender) {
-        println!("{}: {:?} -> got msg: {}", ctx.myself.name(), self, msg);
+        println!("{}: {:?} -> got msg: {}", ctx.name(), self, msg);
         // up and down: ../select-actor/child_a
         let path = "../select-actor/child_a";
-        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        println!("{}: {:?} -> path: {}", ctx.name(), self, path);
         let sel = ctx.select(path).unwrap();
         sel.try_tell(path.to_string(), None);
 
         // child: child_a
         let path = "child_a";
-        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        println!("{}: {:?} -> path: {}", ctx.name(), self, path);
         let sel = ctx.select(path).unwrap();
         sel.try_tell(path.to_string(), None);
 
         // absolute: /user/select-actor/child_a
         let path = "/user/select-actor/child_a";
-        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        println!("{}: {:?} -> path: {}", ctx.name(), self, path);
         let sel = ctx.select(path).unwrap();
         sel.try_tell(path.to_string(), None);
 
         // absolute all: /user/select-actor/*
         let path = "/user/select-actor/*";
-        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        println!("{}: {:?} -> path: {}", ctx.name(), self, path);
         let sel = ctx.select(path).unwrap();
         sel.try_tell(path.to_string(), None);
 
         // all: *
         let path = "*";
-        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        println!("{}: {:?} -> path: {}", ctx.name(), self, path);
         let sel = ctx.select(path).unwrap();
         sel.try_tell(path.to_string(), None);
     }

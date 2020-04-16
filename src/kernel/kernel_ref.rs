@@ -12,7 +12,7 @@ use crate::{
     AnyMessage, Envelope, Message,
 };
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct KernelRef {
     pub tx: Sender<KernelMsg>,
 }

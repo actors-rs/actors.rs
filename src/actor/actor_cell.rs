@@ -509,6 +509,7 @@ fn post_stop<A: Actor>(actor: &mut Option<A>) {
 ///
 /// Since `Context` is specific to an actor and its functions
 /// it is not cloneable.
+#[derive(Debug)]
 pub struct Context<Msg: Message> {
     pub myself: ActorRef<Msg>,
     pub system: ActorSystem,
@@ -521,8 +522,15 @@ where
     Msg: Message,
 {
     /// Returns the `ActorRef` of the current actor.
+    #[inline]
     pub fn myself(&self) -> ActorRef<Msg> {
         self.myself.clone()
+    }
+
+    /// Return the name of actor. Useful for logging
+    #[inline]
+    pub fn name(&self) -> &str {
+        self.myself.name()
     }
 }
 

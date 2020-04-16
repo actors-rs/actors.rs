@@ -248,6 +248,12 @@ pub struct ActorSystem {
     pub(crate) provider: Provider,
 }
 
+impl fmt::Display for ActorSystem {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        f.write_str(self.get_tree().as_str())
+    }
+}
+
 impl ActorSystem {
     /// Create a new `ActorSystem` instance
     ///
