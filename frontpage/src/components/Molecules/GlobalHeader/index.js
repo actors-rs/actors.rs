@@ -15,7 +15,7 @@ const GlobalHeader = () => {
       <Nav>
         <ExternalLinkWithIcon
           secondary
-          href="https://github.com/riker-rs/riker/"
+          href="https://github.com/actors-rs/actors.rs/"
           target="_blank"
           rel="noopener noreferrer"
         >
@@ -23,7 +23,7 @@ const GlobalHeader = () => {
         </ExternalLinkWithIcon>
         <ExternalLinkWithIcon
           secondary
-          href="https://gitter.im/riker-rs/Lobby"
+          href="https://gitter.im/actors-rs-/community"
           target="_blank"
           rel="noopener noreferrer"
         >
