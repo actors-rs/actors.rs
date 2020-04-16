@@ -12,5 +12,6 @@ fn main() {
         "mkdocs/docs/hierarchy.md",
         "mkdocs/docs/messaging.md",
         "mkdocs/docs/supervision.md",
+        "mkdocs/docs/selection.md",
     ]);
 }

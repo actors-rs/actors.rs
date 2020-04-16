@@ -583,49 +583,6 @@ impl ActorRefFactory for ActorSystem {
     }
 }
 
-impl ActorRefFactory for &ActorSystem {
-    fn actor_of_props<A>(
-        &self,
-        props: BoxActorProd<A>,
-        name: &str,
-    ) -> Result<ActorRef<A::Msg>, CreateError>
-    where
-        A: Actor,
-    {
-        self.provider
-            .create_actor(props, name, self.user_root(), self)
-    }
-
-    fn actor_of<A>(&self, name: &str) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
-    where
-        A: ActorFactory,
-    {
-        self.provider
-            .create_actor(Props::new_no_args(A::create), name, self.user_root(), self)
-    }
-
-    fn actor_of_args<A, Args>(
-        &self,
-        name: &str,
-        args: Args,
-    ) -> Result<ActorRef<<A as Actor>::Msg>, CreateError>
-    where
-        Args: ActorArgs,
-        A: ActorFactoryArgs<Args>,
-    {
-        self.provider.create_actor(
-            Props::new_args(A::create_args, args),
-            name,
-            self.user_root(),
-            self,
-        )
-    }
-
-    fn stop(&self, actor: impl ActorReference) {
-        actor.sys_tell(SystemCmd::Stop.into());
-    }
-}
-
 impl TmpActorRefFactory for ActorSystem {
     fn tmp_actor_of_props<A>(&self, props: BoxActorProd<A>) -> Result<ActorRef<A::Msg>, CreateError>
     where

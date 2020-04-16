@@ -1,18 +1,24 @@
 # Actor Selection
 
-The primary means to interact with an actor is through it's actor reference (`ActorRef`). Since every actor also has a path it's possible to 'lookup' an actor by that path. It's also possible to interact with all actors that are part of a path.
+The primary means to interact with an actor is through it's actor reference (`ActorRef`).
+Since every actor also has a path it's possible to 'lookup' an actor by that path.
+It's also possible to interact with all actors that are part of a path.
 
-For example, if an actor is known to live at `/user/comms/high_gain_1`, but we don't have the actor reference for this actor, we can perform a selection:
+For example, if an actor is known to live at `/user/comms/high_gain_1`,
+but we don't have the actor reference for this actor, we can perform a selection:
 
-```rust
+```test
 let hga = ctx.select("/user/comms/high_gain_1").unwrap();
 ```
 
-This will return an `ActorSelection`. In some ways an `ActorSelection` behaves like an `ActorRef` but represents a collection of actors. When sending a message to a seclection all the actors in the selection that accept the sent message type will receive the message.
+This will return an `ActorSelection`. In some ways an `ActorSelection` behaves like an `ActorRef`,
+but represents a collection of actors.
+When sending a message to a selection all the actors in the selection that accept the sent message type
+will receive the message.
 
 To send messages to a selection:
 
-```rust
+```test
 let hga = ctx.select("/user/comms/high_gain_1").unwrap();
 hga.try_tell("I've arrived safely".into(), None);
 ```
@@ -26,8 +32,8 @@ While this example highlights how it's possible to message actors based on their
 
 It is possible to select all actors under an actor path and send the same message the actors in the selection:
 
-```rust
-let sel = ctx.selection("/user/home-control/lighting/*").unwrap();
+```test
+let sel = ctx.select("/user/home-control/lighting/*").unwrap();
 sel.try_tell(Protocol::Off, None);
 ```
 
@@ -39,6 +45,88 @@ In this example an actor responsible for lighting in a home has a child actor fo
 <!-- prettier-ignore-end -->
 
 We've seen that `ActorSelection` provides flexibility for certain use cases such as when an `ActorRef` isn't known at compile time, but more specifically for messaging multiple actors. This comes at the cost of traversing part of the actor hierarchy and cloning messages.
+
+[selection.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/selection.rs)
+
+```rust
+use actors_rs::*;
+
+use actors_rs::system::ActorSystem;
+use std::time::Duration;
+
+// a simple minimal actor for use in tests
+// #[actor(TestProbe)]
+#[derive(Default, Debug)]
+struct Child;
+
+impl Actor for Child {
+    type Msg = String;
+
+    fn recv(&mut self, ctx: &Context<Self::Msg>, msg: Self::Msg, _sender: Sender) {
+        println!("{}: {:?} -> got msg: {}", ctx.myself.name(), self, msg);
+    }
+}
+
+#[derive(Clone, Default, Debug)]
+struct SelectTest;
+
+impl Actor for SelectTest {
+    type Msg = String;
+
+    fn pre_start(&mut self, ctx: &Context<Self::Msg>) {
+        // create first child actor
+        let _ = ctx.actor_of::<Child>("child_a").unwrap();
+
+        // create second child actor
+        let _ = ctx.actor_of::<Child>("child_b").unwrap();
+    }
+
+    fn recv(&mut self, ctx: &Context<Self::Msg>, msg: Self::Msg, _sender: Sender) {
+        println!("{}: {:?} -> got msg: {}", ctx.myself.name(), self, msg);
+        // up and down: ../select-actor/child_a
+        let path = "../select-actor/child_a";
+        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        let sel = ctx.select(path).unwrap();
+        sel.try_tell(path.to_string(), None);
+
+        // child: child_a
+        let path = "child_a";
+        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        let sel = ctx.select(path).unwrap();
+        sel.try_tell(path.to_string(), None);
+
+        // absolute: /user/select-actor/child_a
+        let path = "/user/select-actor/child_a";
+        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        let sel = ctx.select(path).unwrap();
+        sel.try_tell(path.to_string(), None);
+
+        // absolute all: /user/select-actor/*
+        let path = "/user/select-actor/*";
+        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        let sel = ctx.select(path).unwrap();
+        sel.try_tell(path.to_string(), None);
+
+        // all: *
+        let path = "*";
+        println!("{}: {:?} -> path: {}", ctx.myself.name(), self, path);
+        let sel = ctx.select(path).unwrap();
+        sel.try_tell(path.to_string(), None);
+    }
+}
+
+fn main() {
+    let sys = ActorSystem::new().unwrap();
+
+    let actor = sys.actor_of::<SelectTest>("select-actor").unwrap();
+
+    actor.tell("msg for select-actor", None);
+
+    std::thread::sleep(Duration::from_millis(500));
+
+    sys.print_tree();
+}
+```
 
 Next we'll see how Channels provide publish/subscribe features to enable actor choreography.
 
