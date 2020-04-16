@@ -14,23 +14,29 @@ import Badge from '../../Atoms/Badge'
 const badges = [
   {
     badgeUrl: 'https://travis-ci.org/actors-rs/actors.rs',
-    badgeSrc:
-      'https://camo.githubusercontent.com/1a83234a219d856e921a700b2ebdf8ba356bf717/68747470733a2f2f7472617669732d63692e6f72672f72696b65722d72732f72696b65722e7376673f6272616e63683d6d6173746572',
+    badgeSrc: 'https://travis-ci.org/actors-rs/actors.rs.svg?branch=master',
   },
   {
     badgeUrl: 'https://github.com/actors-rs/actors.rs/blob/master/LICENSE',
-    badgeSrc:
-      'https://camo.githubusercontent.com/890acbdcb87868b382af9a4b1fac507b9659d9bf/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4d49542d626c75652e737667',
+    badgeSrc: 'https://img.shields.io/badge/license-MIT-blue.svg',
   },
   {
-    badgeUrl: 'https://crates.io/crates/riker',
-    badgeSrc:
-      'https://camo.githubusercontent.com/d3deca4fa64f3ef0c5ae26693702af602e39d984/68747470733a2f2f6d6572697462616467652e6865726f6b756170702e636f6d2f72696b6572',
+    badgeUrl: 'https://crates.io/crates/actors-rs',
+    badgeSrc: 'https://meritbadge.herokuapp.com/actors-rs',
   },
   {
     badgeUrl: 'https://docs.rs/riker',
+    badgeSrc: 'https://docs.rs/actors-rs/badge.svg',
+  },
+  {
+    badgeUrl: 'https://github.com/prettier/prettier',
     badgeSrc:
-      'https://camo.githubusercontent.com/bcbb8118f4482a5a0d73e8772479ec5b5b17f250/68747470733a2f2f646f63732e72732f72696b65722f62616467652e737667',
+      'https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square',
+  },
+  {
+    badgeUrl: 'https://github.com/pre-commit/pre-commit',
+    badgeSrc:
+      'https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white',
   },
 ]
 

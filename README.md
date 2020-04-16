@@ -1,10 +1,12 @@
 # Riker
 
-[![Build Status](https://travis-ci.org/actors-rs/actors.rs.svg?branch=master?branch=master)](https://travis-ci.org/github/actors-rs/actors.rs)
+[![Build Status](https://travis-ci.org/actors-rs/actors.rs.svg?branch=master)](https://travis-ci.org/github/actors-rs/actors.rs)
 [![Gitter](https://badges.gitter.im/actors-rs-/community.svg)](https://gitter.im/actors-rs-/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
-[![crates.io](https://meritbadge.herokuapp.com/riker)](https://crates.io/crates/riker)
-[![Released API docs](https://docs.rs/riker/badge.svg)](https://docs.rs/riker)
+[![crates.io](https://meritbadge.herokuapp.com/actors-rs)](https://crates.io/crates/actors-rs)
+[![Released API docs](https://docs.rs/actors-rs/badge.svg)](https://docs.rs/actors-rs)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit)
 
 <!-- prettier-ignore-start -->
 
@@ -55,7 +57,7 @@ Riker provides:
 
 ```toml
 [dependencies]
-actors = "0.1"
+actors-rs = "0.1"
 ```
 
 `main.rs`:
