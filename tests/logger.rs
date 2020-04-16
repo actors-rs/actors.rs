@@ -1,6 +1,6 @@
 use futures::executor::block_on;
 
-use actors::system::SystemBuilder;
+use actors_rs::system::SystemBuilder;
 use slog::{o, Fuse, Logger};
 
 mod common {

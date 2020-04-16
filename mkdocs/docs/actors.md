@@ -41,7 +41,7 @@ To define an actor, the system needs to understand how an actor should handle th
 Here's the Rust code:
 
 ```rust
-use actors::actors::*;
+use actors_rs::*;
 
 struct MyActor;
 
@@ -64,7 +64,7 @@ Every application has an `ActorSystem`. The actor system provides actor manageme
 To start the actor system:
 
 ```rust
-use actors::actors::*;
+use actors_rs::*;
 
 fn main() {
     let sys = ActorSystem::new().unwrap();
@@ -77,7 +77,7 @@ Once we've started the actor system we're ready to create some actors.
 We can also configure the system with a custom name using the `SystemBuilder`:
 
 ```rust
-use actors::actors::*;
+use actors_rs::*;
 
 fn main() {
     let sys = SystemBuilder::new()
@@ -90,7 +90,7 @@ fn main() {
 Once the actor system is started, we can begin to create actors:
 
 ```rust
-use actors::actors::*;
+use actors_rs::*;
 
 #[derive(Default)]
 struct MyActor;
@@ -140,8 +140,7 @@ If we want to send a message to an actor, we use the `tell` method on the actor'
 [basic.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/basic.rs)
 
 ```rust
-extern crate actors;
-use actors::actors::*;
+use actors_rs::*;
 use std::time::Duration;
 
 #[derive(Default)]

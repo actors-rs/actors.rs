@@ -1,4 +1,4 @@
-#![crate_name = "actors"]
+#![crate_name = "actors_rs"]
 #![deny(clippy::all)]
 #![deny(clippy::pedantic)]
 #![deny(clippy::nursery)]

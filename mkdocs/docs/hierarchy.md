@@ -44,8 +44,7 @@ method using `Context.actor_of`.
 [hierarchy.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/hierarchy.rs)
 
 ```rust
-extern crate actors;
-use actors::actors::*;
+use actors_rs::*;
 use std::time::Duration;
 
 #[derive(Default)]

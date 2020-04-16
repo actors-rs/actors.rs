@@ -1,12 +1,12 @@
 #[macro_use]
 extern crate riker_testkit;
 
-use actors::*;
+use actors_rs::*;
 
 use riker_testkit::probe::channel::{probe, ChannelProbe};
 use riker_testkit::probe::{Probe, ProbeReceive};
 
-use actors::system::{ActorSystem, Timer};
+use actors_rs::system::{ActorSystem, Timer};
 use chrono::{Duration as CDuration, Utc};
 use std::time::Duration;
 use uuid::Uuid;

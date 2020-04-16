@@ -1,5 +1,5 @@
-use actors::system::{ActorSystem, Run, SystemBuilder};
-use actors::*;
+use actors_rs::system::{ActorSystem, Run, SystemBuilder};
+use actors_rs::*;
 use futures::executor::block_on;
 
 #[test]

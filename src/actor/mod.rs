@@ -192,7 +192,7 @@ impl<A: Actor + ?Sized> Actor for Box<A> {
 /// # Examples
 ///
 /// ```
-/// # use actors::*;
+/// # use actors_rs::*;
 ///
 /// #[derive(Clone, Debug)]
 /// pub struct Foo;

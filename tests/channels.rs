@@ -1,9 +1,9 @@
 #[macro_use]
 extern crate riker_testkit;
 
-use actors::*;
+use actors_rs::*;
 
-use actors::system::{ActorSystem, SystemEvent, SystemMsg};
+use actors_rs::system::{ActorSystem, SystemEvent, SystemMsg};
 use riker_testkit::probe::channel::{probe, ChannelProbe};
 use riker_testkit::probe::{Probe, ProbeReceive};
 

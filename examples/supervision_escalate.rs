@@ -1,4 +1,4 @@
-use actors::*;
+use actors_rs::*;
 use std::time::Duration;
 
 #[derive(Clone, Debug)]
