@@ -10,7 +10,7 @@
     "build": "rm -rf frontpage/public/book && lerna run build --stream && mv mkdocs/site frontpage/public/book",
     "depcheck": "lerna run depcheck --stream",
     "deploy": "yarn build && gh-pages -d frontpage/public -b master -r 'https://github.com/actors-rs/actors-rs.github.io.git'",
-    "publish": "cargo publish --dry-run",
+    "publish": "cargo publish",
     "lint": "nopenv pre-commit run -a",
     "test": "cargo test",
     "install": "npip install"

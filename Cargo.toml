@@ -8,7 +8,7 @@ homepage = "https://riker.rs"
 repository = "https://github.com/actors-rs/actors.rs"
 license = "MIT"
 readme = "README.md"
-keywords = ["actor", "actors", "actor-model", "async", "cqrs", "event_sourcing"]
+keywords = ["actor", "actor-model", "async", "cqrs", "event_sourcing"]
 build = "build.rs"
 
 [badges]
