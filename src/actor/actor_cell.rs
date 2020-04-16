@@ -15,6 +15,9 @@ use uuid::Uuid;
 
 use rand;
 
+use crate::actor_ref::{
+    ActorRef, ActorRefFactory, ActorReference, BasicActorRef, Tell, TmpActorRefFactory,
+};
 use crate::{
     actor::{props::ActorFactory, *},
     kernel::{

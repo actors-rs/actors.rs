@@ -8,10 +8,8 @@ use chrono::{DateTime, Utc};
 use config::Config;
 use uuid::Uuid;
 
-use crate::{
-    actor::{ActorRef, BasicActorRef, Sender},
-    AnyMessage, Message,
-};
+use crate::actor_ref::{ActorRef, BasicActorRef, Sender};
+use crate::{AnyMessage, Message};
 
 pub type TimerRef = mpsc::Sender<Job>;
 

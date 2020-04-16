@@ -56,7 +56,7 @@ The sequence followed is:
 [supervision_restart.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/supervision_restart.rs)
 
 ```rust
-use actors::actors::*;
+use actors::*;
 use std::time::Duration;
 
 #[derive(Clone, Debug)]
@@ -167,7 +167,7 @@ The sequence followed is:
 [supervision_escalate.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/supervision_escalate.rs)
 
 ```rust
-use actors::actors::*;
+use actors::*;
 use std::time::Duration;
 
 #[derive(Clone, Debug)]
@@ -309,7 +309,7 @@ The stop strategy stops the failed actor, removing it and its mailbox from the s
 [supervision_stop.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/supervision_stop.rs)
 
 ```rust
-use actors::actors::*;
+use actors::*;
 use std::time::Duration;
 
 #[derive(Clone, Debug)]

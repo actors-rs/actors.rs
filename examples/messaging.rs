@@ -1,4 +1,4 @@
-use actors::actors::*;
+use actors::*;
 use std::time::Duration;
 
 // Define the messages we'll use

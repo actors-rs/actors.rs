@@ -1,7 +1,5 @@
-use crate::actor::{
-    Actor, ActorRef, All, BasicActorRef, BoxActorProd, ChannelMsg, Context, DeadLetter, Props,
-    Subscribe, Tell,
-};
+use crate::actor::{Actor, All, BoxActorProd, ChannelMsg, Context, DeadLetter, Props, Subscribe};
+use crate::actor_ref::{ActorRef, BasicActorRef, Tell};
 use config::Config;
 use slog::{info, o, Drain, Level, Logger, Never, OwnedKVList, Record};
 use std::str::FromStr;

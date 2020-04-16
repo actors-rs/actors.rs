@@ -1,10 +1,10 @@
 use std::{collections::HashMap, hash::Hash};
 
+use crate::actor_ref::{
+    ActorRef, ActorRefFactory, ActorReference, BasicActorRef, BoxedTell, Sender,
+};
 use crate::{
-    actor::{
-        Actor, ActorRef, ActorRefFactory, ActorReference, BasicActorRef, BoxedTell, Context,
-        CreateError, Receive, Sender,
-    },
+    actor::{Actor, Context, CreateError, Receive},
     system::{SystemEvent, SystemMsg},
     Message,
 };

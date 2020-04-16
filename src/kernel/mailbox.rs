@@ -6,6 +6,7 @@ use std::thread;
 
 use config::Config;
 
+use crate::actor_ref::{ActorReference, BasicActorRef, Sender, Tell};
 use crate::{
     actor::actor_cell::ExtendedCell,
     actor::*,

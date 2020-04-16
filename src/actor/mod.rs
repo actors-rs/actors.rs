@@ -13,10 +13,6 @@ use crate::validate::InvalidName;
 // Public riker::actor API (plus the pub data types in this file)
 pub use self::{
     actor_cell::Context,
-    actor_ref::{
-        ActorRef, ActorRefFactory, ActorReference, BasicActorRef, BoxedTell, Sender, Tell,
-        TmpActorRefFactory,
-    },
     channel::{
         channel, All, Channel, ChannelMsg, ChannelRef, DLChannelMsg, DeadLetter, EventsChannel,
         Publish, Subscribe, SysTopic, Topic, Unsubscribe, UnsubscribeAll,
@@ -26,6 +22,8 @@ pub use self::{
     selection::{ActorSelection, ActorSelectionFactory},
     uri::{ActorId, ActorPath, ActorUri},
 };
+use crate::actor_ref::BasicActorRef;
+use crate::actor_ref::Sender;
 use crate::system::SystemMsg;
 use crate::Message;
 
@@ -194,7 +192,7 @@ impl<A: Actor + ?Sized> Actor for Box<A> {
 /// # Examples
 ///
 /// ```
-/// # use actors::actors::*;
+/// # use actors::*;
 ///
 /// #[derive(Clone, Debug)]
 /// pub struct Foo;

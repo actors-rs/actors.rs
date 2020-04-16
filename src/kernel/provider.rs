@@ -4,6 +4,7 @@ use std::{
     sync::{Arc, Mutex},
 };
 
+use crate::actor_ref::{ActorRef, ActorReference, BasicActorRef};
 use crate::{
     actor::actor_cell::{ActorCell, ExtendedCell},
     actor::*,

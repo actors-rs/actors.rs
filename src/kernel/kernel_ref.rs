@@ -68,7 +68,7 @@ where
 
 pub fn dispatch_any(
     msg: &mut AnyMessage,
-    sender: crate::actor::Sender,
+    sender: crate::actor_ref::Sender,
     mbox: &Arc<dyn AnySender>,
     kernel: &KernelRef,
     sys: &ActorSystem,

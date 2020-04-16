@@ -11,6 +11,10 @@ mod validate;
 pub mod actor;
 pub mod kernel;
 pub mod system;
+pub use crate::actor::actor_ref::*;
+pub use crate::actor::*;
+pub use crate::system::ActorSystem;
+pub use crate::system::SystemBuilder;
 
 use std::any::Any;
 use std::env;
@@ -18,8 +22,6 @@ use std::fmt;
 use std::fmt::Debug;
 
 use config::{Config, File};
-
-use crate::actor::BasicActorRef;
 
 #[must_use]
 pub fn load_config() -> Config {
@@ -109,10 +111,4 @@ impl Debug for AnyMessage {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         f.write_str("AnyMessage")
     }
-}
-
-pub mod actors {
-    pub use crate::actor::*;
-    pub use crate::system::{ActorSystem, Run, SystemBuilder, SystemEvent, SystemMsg, Timer};
-    pub use crate::{AnyMessage, Message};
 }

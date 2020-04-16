@@ -12,7 +12,7 @@ Let's see how these are used:
 [messaging.rs](https://github.com/actors-rs/actors.rs/blob/master/examples/messaging.rs)
 
 ```rust
-use actors::actors::*;
+use actors::*;
 use std::time::Duration;
 
 // Define the messages we'll use

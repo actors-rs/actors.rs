@@ -62,7 +62,7 @@ actors = "0.1"
 
 ```rust
 use std::time::Duration;
-use actors::actors::*;
+use actors::*;
 
 #[derive(Default)]
 struct MyActor;

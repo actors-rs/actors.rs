@@ -4,10 +4,8 @@ pub(crate) mod provider;
 pub(crate) mod queue;
 
 use crate::actor::actor_cell::ExtendedCell;
-use crate::actor::{
-    Actor, ActorProducer, ActorRef, ActorReference, BasicActorRef, BoxActorProd, Context,
-    CreateError,
-};
+use crate::actor::{Actor, ActorProducer, BoxActorProd, Context, CreateError};
+use crate::actor_ref::{ActorRef, ActorReference, BasicActorRef};
 use crate::kernel::kernel_ref::KernelRef;
 use crate::kernel::mailbox::{flush_to_deadletters, run_mailbox, Mailbox};
 use crate::system::{ActorRestarted, ActorSystem, ActorTerminated, SystemMsg};

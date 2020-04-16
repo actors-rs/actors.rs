@@ -1,8 +1,6 @@
 pub(crate) mod logger;
 pub(crate) mod timer;
 
-use crate::actor::BasicActorRef;
-
 // Public riker::system API (plus the pub data types in this file)
 pub use self::timer::{BasicTimer, Timer};
 
@@ -25,6 +23,9 @@ use futures::{
 use rand;
 use uuid::Uuid;
 
+use crate::actor_ref::{
+    ActorRef, ActorRefFactory, ActorReference, BasicActorRef, Sender, Tell, TmpActorRefFactory,
+};
 use crate::{
     actor::{props::ActorFactory, *},
     kernel::provider::{create_root, Provider},

@@ -45,7 +45,7 @@ method using `Context.actor_of`.
 
 ```rust
 extern crate actors;
-use actors::actors::*;
+use actors::*;
 use std::time::Duration;
 
 #[derive(Default)]
