@@ -47,7 +47,7 @@ Riker provides:
 - Command Query Responsibility Segregation (CQRS)
 - Easily run futures
 
-[Website](https://riker.rs) | [API Docs](https://docs.rs/riker)
+[Website](https://actors-rs.github.io/) | [API Docs](https://docs.rs/riker)
 
 ## Example
 
