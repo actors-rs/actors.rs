@@ -1,6 +1,6 @@
 [package]
 name = "actors-rs"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Lee Smith <lee@riker.rs>", "Olexiy Buyanskyy <olexiyb@gmail.com>"]
 edition = "2018"
 description = "Easily build fast, highly concurrent and resilient applications. An Actor Framework for Rust."
