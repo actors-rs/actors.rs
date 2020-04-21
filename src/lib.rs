@@ -15,6 +15,8 @@ pub use crate::actor::actor_ref::*;
 pub use crate::actor::*;
 pub use crate::system::ActorSystem;
 pub use crate::system::SystemBuilder;
+pub use crate::system::SystemEvent;
+pub use crate::system::SystemMsg;
 
 use std::any::Any;
 use std::env;

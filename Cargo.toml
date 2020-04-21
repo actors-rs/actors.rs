@@ -1,6 +1,6 @@
 [package]
 name = "actors-rs"
-version = "0.1.3"
+version = "0.1.4"
 authors = ["Lee Smith <lee@riker.rs>", "Olexiy Buyanskyy <olexiyb@gmail.com>"]
 edition = "2018"
 description = "Easily build fast, highly concurrent and resilient applications. An Actor Framework for Rust."
@@ -42,7 +42,7 @@ members = [
 
 [patch.crates-io]
 actors-macros = { path = "actors-macros", version = "0.1.1" }
-actors-rs = { path = "./", version = "0.1.3" }
+actors-rs = { path = "./", version = "0.1.4" }
 
 [[example]]
 name = "basic"

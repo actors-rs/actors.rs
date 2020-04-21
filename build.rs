@@ -13,5 +13,6 @@ fn main() {
         "mkdocs/docs/messaging.md",
         "mkdocs/docs/supervision.md",
         "mkdocs/docs/selection.md",
+        "mkdocs/docs/channels.md",
     ]);
 }
