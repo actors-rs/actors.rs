@@ -147,7 +147,7 @@ impl Receive<PowerStatus> for GpsActor {
     type Msg = GpsActorMsg;
 
     fn receive(&mut self, ctx: &Context<Self::Msg>, msg: PowerStatus, _sender: Sender) {
-        println!("{}: -> got msg: {:?}", ctx.myself.name(), msg);
+        println!("{}: -> got msg: {:?}", ctx.name(), msg);
     }
 }
 
