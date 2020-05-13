@@ -2,21 +2,19 @@
 language: rust
 os: linux
 dist: xenial
+install:
+  - curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 1.10.1
+  - export PATH=$HOME/.yarn/bin:$PATH
 jobs:
   include:
     - rust: stable
+      before_install:
+        - sudo apt-get update
+        - sudo apt-get install python3
       script:
+        - yarn
+        - yarn lint
         - cargo update
         - cargo check --all --no-default-features
         - cargo test --all-features --all -- --nocapture
         - cd actors-macros; cargo test --no-default-features -- --nocapture; cd ..
-    - name: 'pre-commit'
-      language: python
-      rust: stable
-      node_js: '10'
-      python: '3.7'
-      before_install:
-        - |
-          pip3 install pre-commit
-      script:
-        - pre-commit run -a
