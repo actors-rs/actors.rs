@@ -6,6 +6,8 @@ jobs:
   include:
     - rust: stable
 script:
+  - yarn
+  - yarn lint
   - cargo update
   - cargo check --all --no-default-features
   - cargo test --all-features --all -- --nocapture
