@@ -12,6 +12,8 @@ jobs:
         - cd actors-macros; cargo test --no-default-features -- --nocapture; cd ..
     - name: 'pre-commit'
       language: python
+      rust: stable
+      node_js: '10'
       python: '3.7'
       before_install:
         - |
