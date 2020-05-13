@@ -9,9 +9,9 @@ jobs:
   include:
     - rust: stable
       before_install:
-        - sudo apt-get update
         - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
         - curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+        - sudo apt-get update
         - sudo apt-get install -y nodejs yarn
       script:
         - yarn
