@@ -5,10 +5,13 @@ dist: xenial
 jobs:
   include:
     - rust: stable
-script:
-  - yarn
-  - yarn lint
-  - cargo update
-  - cargo check --all --no-default-features
-  - cargo test --all-features --all -- --nocapture
-  - cd actors-macros; cargo test --no-default-features -- --nocapture; cd ..
+      script:
+        - cargo update
+        - cargo check --all --no-default-features
+        - cargo test --all-features --all -- --nocapture
+        - cd actors-macros; cargo test --no-default-features -- --nocapture; cd ..
+    - language: node_js
+      node_js: 10
+      script:
+        - yarn
+        - yarn lint
