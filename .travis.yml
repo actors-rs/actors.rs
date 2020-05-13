@@ -12,8 +12,8 @@ jobs:
         - sudo apt-get update
         - sudo apt-get install -y nodejs
         - sudo apt install python3-pip
-        - pip install --upgrade pip
-        - pip3 install pre-commit --user
+        - sudo pip install --upgrade pip
+        - pip install pre-commit --user
       script:
         - pre-commit run -a
         - cargo update
