@@ -11,9 +11,10 @@ jobs:
         - cargo test --all-features --all -- --nocapture
         - cd actors-macros; cargo test --no-default-features -- --nocapture; cd ..
     - name: 'pre-commit'
+      language: python
       python: '3.7'
       before_install:
         - |
-          pip install pre-commit
+          pip3 install pre-commit
       script:
         - pre-commit run -a
